@@ -1,0 +1,6 @@
+= Thanos
+
+This is a Commodore component to manage Thanos.
+It's based on https://github.com/thanos-io/kube-thanos[kube-thanos].
+
+See the xref:references/parameters.adoc[parameters] reference for further details.

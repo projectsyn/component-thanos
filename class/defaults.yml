@@ -1,0 +1,3 @@
+parameters:
+  thanos:
+    namespace: syn-thanos
