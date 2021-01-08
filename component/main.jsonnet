@@ -54,5 +54,5 @@ local query = thanos.query(params.commonConfig + params.query) {
       },
     }
   for name in std.objectFields(thanosMixin.grafanaDashboards)
-  if std.member(['overview.json', 'query.json'], name)
+  if std.member([ 'overview.json', 'query.json' ], name)
 }
