@@ -31,6 +31,11 @@ local query = thanos.query(params.commonConfig + params.query) {
         ),
     },
   },
+  service+: {
+    spec+: {
+      type: params.query.serviceType,
+    },
+  },
 };
 
 {

@@ -34,6 +34,16 @@ type:: dict
 Configuration for the Thanos https://thanos.io/tip/components/query.md[Query] component.
 See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
 
+=== `serviceType`
+
+[horizontal]
+type:: string
+default:: `ClusterIP`
+
+Service type for query service.
+Can be used to expose the Query endpoint externally via `LoadBalancer` type.
+
+
 == `images`
 
 [horizontal]

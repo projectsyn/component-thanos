@@ -15,6 +15,7 @@ parameters:
               storage: 10Gi
     query:
       replicas: 2
+      serviceType: ClusterIP
       replicaLabels:
         - prometheus_replica
         - rule_replica
