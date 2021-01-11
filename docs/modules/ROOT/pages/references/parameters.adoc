@@ -34,6 +34,8 @@ type:: dict
 Configuration for the Thanos https://thanos.io/tip/components/query.md[Query] component.
 See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
 
+Especially the `stores` list is important as it needs to be populated by the Thanos store API endpoints this Query should use.
+
 === `serviceType`
 
 [horizontal]
@@ -56,7 +58,7 @@ Dictionary containing the container images used by this component.
 
 [source,yaml]
 ----
-paramters:
+parameters:
   thanos:
     namespace: example-namespace
     commonConfig:

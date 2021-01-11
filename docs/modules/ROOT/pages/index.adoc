@@ -1,6 +1,7 @@
 = Thanos
 
 This is a Commodore component to manage Thanos.
-It's based on https://github.com/thanos-io/kube-thanos[kube-thanos].
+It's based on https://github.com/thanos-io/kube-thanos[kube-thanos] and currently provisions the https://thanos.io/tip/components/query.md[Query] component.
+Additionally it creates alerting rules and Grafana dashboards from the https://github.com/thanos-io/thanos/blob/master/mixin/README.md[thanos-mixin].
 
 See the xref:references/parameters.adoc[parameters] reference for further details.
