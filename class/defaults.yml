@@ -1,7 +1,9 @@
 parameters:
   thanos:
     namespace: syn-thanos
-    dashboardNamespace: ${thanos:namespace}
+    dashboards:
+      enabled: false
+      namespace: ${thanos:namespace}
     commonConfig:
       namespace: ${thanos:namespace}
       version: v0.17.2

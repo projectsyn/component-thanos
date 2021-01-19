@@ -44,20 +44,20 @@ local query = thanos.query(params.commonConfig + params.query) {
 {
   ['query/' + name]: query[name]
   for name in std.objectFields(query)
-} +
-{
-  ['dashboards/' + std.rstripChars(name, '.json')]:
-    kube.ConfigMap('dashboard-thanos-' + std.rstripChars(name, '.json')) {
-      metadata+: {
-        namespace: params.dashboardNamespace,
-        labels+: {
-          grafana_dashboard: '1',
+} + if params.dashboards.enabled then
+  {
+    ['dashboards/' + std.rstripChars(name, '.json')]:
+      kube.ConfigMap('dashboard-thanos-' + std.rstripChars(name, '.json')) {
+        metadata+: {
+          namespace: params.dashboards.namespace,
+          labels+: {
+            grafana_dashboard: '1',
+          },
         },
-      },
-      data+: {
-        ['thanos-' + name]: std.manifestJson(thanosMixin.grafanaDashboards[name]),
-      },
-    }
-  for name in std.objectFields(thanosMixin.grafanaDashboards)
-  if std.member([ 'overview.json', 'query.json' ], name)
-}
+        data+: {
+          ['thanos-' + name]: std.manifestJson(thanosMixin.grafanaDashboards[name]),
+        },
+      }
+    for name in std.objectFields(thanosMixin.grafanaDashboards)
+    if std.member([ 'overview.json', 'query.json' ], name)
+  } else {}

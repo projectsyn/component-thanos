@@ -10,7 +10,16 @@ default:: `syn-thanos`
 
 The namespace in which to deploy this component.
 
-== `dashboardNamespace`
+== `dashboards.enabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+If the Grafana dashboards should be rendered in a ConfigMap.
+This will increase the compile time drastically when enabled.
+
+== `dashboards.namespace`
 
 [horizontal]
 type:: string
