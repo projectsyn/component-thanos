@@ -10,10 +10,68 @@ default:: `syn-thanos`
 
 The namespace in which to deploy this component.
 
+== `dashboards.enabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+If the Grafana dashboards should be rendered in a ConfigMap.
+This will increase the compile time drastically when enabled.
+
+== `dashboards.namespace`
+
+[horizontal]
+type:: string
+default:: `syn-thanos`
+
+The namespace in which to create the Grafana dashboard ConfigMaps.
+
+== `commonConfig`
+
+[horizontal]
+type:: dict
+
+Common configuration for all Thanos components.
+See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
+
+== `query`
+
+[horizontal]
+type:: dict
+
+Configuration for the Thanos https://thanos.io/tip/components/query.md[Query] component.
+See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
+
+Especially the `stores` list is important as it needs to be populated by the Thanos store API endpoints this Query should use.
+
+=== `serviceType`
+
+[horizontal]
+type:: string
+default:: `ClusterIP`
+
+Service type for query service.
+Can be used to expose the Query endpoint externally via `LoadBalancer` type.
+
+
+== `images`
+
+[horizontal]
+type:: dictionary
+
+Dictionary containing the container images used by this component.
+
 
 == Example
 
 [source,yaml]
 ----
-namespace: example-namespace
+parameters:
+  thanos:
+    namespace: example-namespace
+    commonConfig:
+      version: v0.17.2
+    query:
+      replicas: 3
 ----

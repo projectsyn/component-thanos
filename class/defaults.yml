@@ -1,3 +1,28 @@
 parameters:
   thanos:
     namespace: syn-thanos
+    dashboards:
+      enabled: false
+      namespace: ${thanos:namespace}
+    commonConfig:
+      namespace: ${thanos:namespace}
+      version: v0.17.2
+      image: ${thanos:images:thanos:registry}/${thanos:images:thanos:image}:${thanos:images:thanos:tag}
+      serviceMonitor: true
+      volumeClaimTemplate:
+        spec:
+          accessModes: [ReadWriteOnce]
+          resources:
+            requests:
+              storage: 10Gi
+    query:
+      replicas: 2
+      serviceType: ClusterIP
+      replicaLabels:
+        - prometheus_replica
+        - rule_replica
+    images:
+      thanos:
+        registry: quay.io
+        image: thanos/thanos
+        tag: ${thanos:commonConfig:version}
