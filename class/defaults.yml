@@ -25,6 +25,9 @@ parameters:
       replicaLabels:
         - prometheus_replica
         - rule_replica
+    bucket:
+      enabled: false
+      replicas: 1
     store:
       enabled: false
       replicas: 2

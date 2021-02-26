@@ -81,6 +81,23 @@ If the Store component should be deployed.
 It will require an `objectStorageConfig` if enabled.
 
 
+== `bucket`
+
+[horizontal]
+type:: dict
+
+Configuration for the Thanos https://thanos.io/v0.18/components/tools.md/#bucket-web[Bucket Web] component.
+See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
+
+=== `enabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+If the Bucket Web component should be deployed.
+It will require an `objectStorageConfig` if enabled.
+
 == `images`
 
 [horizontal]
@@ -101,6 +118,8 @@ parameters:
     query:
       replicas: 3
     store:
+      enabled: true
+    bucket:
       enabled: true
     objectStorageConfig:
       type: S3
