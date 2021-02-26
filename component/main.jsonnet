@@ -7,57 +7,9 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
-local query = thanos.query(params.commonConfig + params.query) {
-  deployment+: {
-    spec+: {
-      template+: {
-        spec+: {
-          securityContext+: {
-            runAsUser: 10001,
-          },
-        },
-      },
-    },
-  },
-  alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-alerts') {
-    metadata+: {
-      namespace: params.namespace,
-    },
-    spec+: {
-      groups+:
-        std.filter(
-          function(group) group.name == 'thanos-query.rules',
-          thanosMixin.prometheusAlerts.groups
-        ),
-    },
-  },
-  service+: {
-    spec+: {
-      type: params.query.serviceType,
-    },
-  },
-};
-
 {
   '00_namespace': kube.Namespace(params.namespace),
-} +
-{
-  ['query/' + name]: query[name]
-  for name in std.objectFields(query)
-} + if params.dashboards.enabled then
-  {
-    ['dashboards/' + std.rstripChars(name, '.json')]:
-      kube.ConfigMap('dashboard-thanos-' + std.rstripChars(name, '.json')) {
-        metadata+: {
-          namespace: params.dashboards.namespace,
-          labels+: {
-            grafana_dashboard: '1',
-          },
-        },
-        data+: {
-          ['thanos-' + name]: std.manifestJson(thanosMixin.grafanaDashboards[name]),
-        },
-      }
-    for name in std.objectFields(thanosMixin.grafanaDashboards)
-    if std.member([ 'overview.json', 'query.json' ], name)
-  } else {}
+}
++ (import 'query.libsonnet')
++ if params.dashboards.enabled then
+  (import 'dashboards.libsonnet') else {}
