@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial implementation ([#1])
 - Deploy Thanos Store ([#2])
+- Deploy Thanos Compactor ([#3])
 - Deploy Thanos Bucket Web ([#4])
 
 ### Changed
@@ -20,4 +21,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [#1]: https://github.com/projectsyn/component-thanos/pulls/1
 [#2]: https://github.com/projectsyn/component-thanos/pulls/2
+[#3]: https://github.com/projectsyn/component-thanos/pulls/3
 [#4]: https://github.com/projectsyn/component-thanos/pulls/4

@@ -32,6 +32,13 @@ parameters:
       enabled: false
       replicas: 2
       serviceType: ClusterIP
+    compactor:
+      enabled: false
+      replicas: 1
+      deduplicationReplicaLabels: ${thanos:query:replicaLabels}
+      retentionResolutionRaw: 30d
+      retentionResolution5m: 90d
+      retentionResolution1h: 1y
     images:
       thanos:
         registry: quay.io

@@ -80,6 +80,22 @@ default:: `false`
 If the Store component should be deployed.
 It will require an `objectStorageConfig` if enabled.
 
+== `compactor`
+
+[horizontal]
+type:: dict
+
+Configuration for the Thanos https://thanos.io/tip/components/compact.md[Compactor] component.
+See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
+
+=== `enabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+If the Compactor component should be deployed.
+It will require an `objectStorageConfig` if enabled.
 
 == `bucket`
 
