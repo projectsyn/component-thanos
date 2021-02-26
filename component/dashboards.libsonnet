@@ -21,5 +21,5 @@ if params.dashboards.enabled then {
       },
     }
   for name in std.objectFields(thanosMixin.grafanaDashboards)
-  if std.member(['overview.json', 'query.json'], name)
+  if std.member([ 'overview.json', 'query.json' ], name)
 } else {}
