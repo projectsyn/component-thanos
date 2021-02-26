@@ -9,18 +9,26 @@ parameters:
       version: v0.17.2
       image: ${thanos:images:thanos:registry}/${thanos:images:thanos:image}:${thanos:images:thanos:tag}
       serviceMonitor: true
+      objectStorageConfig:
+        name: thanos-objectstorage
+        key: thanos.yaml
       volumeClaimTemplate:
         spec:
           accessModes: [ReadWriteOnce]
           resources:
             requests:
               storage: 10Gi
+    objectStorageConfig: {}
     query:
       replicas: 2
       serviceType: ClusterIP
       replicaLabels:
         - prometheus_replica
         - rule_replica
+    store:
+      enabled: false
+      replicas: 2
+      serviceType: ClusterIP
     images:
       thanos:
         registry: quay.io

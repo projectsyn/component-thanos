@@ -7,7 +7,7 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
-{
+if params.dashboards.enabled then {
   ['dashboards/' + std.rstripChars(name, '.json')]:
     kube.ConfigMap('dashboard-thanos-' + std.rstripChars(name, '.json')) {
       metadata+: {
@@ -22,4 +22,4 @@ local params = inv.parameters.thanos;
     }
   for name in std.objectFields(thanosMixin.grafanaDashboards)
   if std.member(['overview.json', 'query.json'], name)
-}
+} else {}

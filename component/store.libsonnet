@@ -7,10 +7,8 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
-local query = thanos.query(params.commonConfig + params.query {
-  [if params.store.enabled then 'stores']+: [ 'dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % params.namespace ],
-}) {
-  deployment+: {
+local store = thanos.store(params.commonConfig + params.store) {
+  statefulSet+: {
     spec+: {
       template+: {
         spec+: {
@@ -21,26 +19,26 @@ local query = thanos.query(params.commonConfig + params.query {
       },
     },
   },
-  alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-query-alerts') {
+  alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-store-alerts') {
     metadata+: {
       namespace: params.namespace,
     },
     spec+: {
       groups+:
         std.filter(
-          function(group) group.name == 'thanos-query.rules',
+          function(group) group.name == 'thanos-store.rules',
           thanosMixin.prometheusAlerts.groups
         ),
     },
   },
   service+: {
     spec+: {
-      type: params.query.serviceType,
+      type: params.store.serviceType,
     },
   },
 };
 
-{
-  ['query/' + name]: query[name]
-  for name in std.objectFields(query)
-}
+if params.store.enabled then {
+  ['store/' + name]: store[name]
+  for name in std.objectFields(store)
+} else {}
