@@ -6,7 +6,7 @@ parameters:
       namespace: ${thanos:namespace}
     commonConfig:
       namespace: ${thanos:namespace}
-      version: v0.17.2
+      version: v0.18.0
       image: ${thanos:images:thanos:registry}/${thanos:images:thanos:image}:${thanos:images:thanos:tag}
       serviceMonitor: true
       objectStorageConfig:
