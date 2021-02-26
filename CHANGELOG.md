@@ -8,10 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial implementation ([#1])
+- Deploy Thanos Store ([#2])
 
 ### Changed
 
-- Disable dashboards by default ([#2])
+- Disable dashboards by default ([#1])
+- Upgrade to v0.18.0 ([#2])
 
 [Unreleased]: https://github.com/projectsyn/component-thanos/compare/38735201e88d2b0bc7022dd65587bc516780946c...HEAD
 

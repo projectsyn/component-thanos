@@ -54,6 +54,32 @@ default:: `ClusterIP`
 Service type for query service.
 Can be used to expose the Query endpoint externally via `LoadBalancer` type.
 
+== `objectStorageConfig`
+
+[horizontal]
+type:: dict
+
+Configuration for the Thanos https://thanos.io/tip/thanos/storage.md[Object Storage].
+See https://thanos.io/tip/thanos/storage.md[Object Storage & Data Format] for available options.
+This configuration will be stored in a K8s secret.
+
+== `store`
+
+[horizontal]
+type:: dict
+
+Configuration for the Thanos https://thanos.io/tip/components/store.md[Store] component.
+See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
+
+=== `enabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+If the Store component should be deployed.
+It will require an `objectStorageConfig` if enabled.
+
 
 == `images`
 
@@ -74,4 +100,13 @@ parameters:
       version: v0.17.2
     query:
       replicas: 3
+    store:
+      enabled: true
+    objectStorageConfig:
+      type: S3
+      config:
+        bucket: thanos-metrics
+        endpoint: s3.example.com
+        access_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/access_key}
+        secret_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/secret_key}
 ----
