@@ -26,7 +26,7 @@ local compactor = thanos.compact(params.commonConfig + params.compactor) {
     spec+: {
       groups+:
         std.filter(
-          function(group) group.name == 'thanos-compactor.rules',
+          function(group) group.name == 'thanos-compact.rules',
           thanosMixin.prometheusAlerts.groups
         ),
     },
