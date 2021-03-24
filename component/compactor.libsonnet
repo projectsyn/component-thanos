@@ -8,17 +8,6 @@ local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
 local compactor = thanos.compact(params.commonConfig + params.compactor) {
-  statefulSet+: {
-    spec+: {
-      template+: {
-        spec+: {
-          securityContext+: {
-            runAsUser: 10001,
-          },
-        },
-      },
-    },
-  },
   alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-compactor-alerts') {
     metadata+: {
       namespace: params.namespace,
@@ -26,7 +15,7 @@ local compactor = thanos.compact(params.commonConfig + params.compactor) {
     spec+: {
       groups+:
         std.filter(
-          function(group) group.name == 'thanos-compact.rules',
+          function(group) group.name == 'thanos-compact',
           thanosMixin.prometheusAlerts.groups
         ),
     },

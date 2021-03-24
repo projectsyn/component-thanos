@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Disable dashboards by default ([#1])
 - Upgrade to v0.18.0 ([#2])
+- Update dependencies ([#6])
 
 ### Fixed
 
@@ -28,3 +29,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#3]: https://github.com/projectsyn/component-thanos/pulls/3
 [#4]: https://github.com/projectsyn/component-thanos/pulls/4
 [#5]: https://github.com/projectsyn/component-thanos/pulls/5
+[#6]: https://github.com/projectsyn/component-thanos/pulls/6
