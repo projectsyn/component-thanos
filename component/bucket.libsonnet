@@ -7,19 +7,7 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
-local bucket = thanos.bucket(params.commonConfig + params.bucket) {
-  deployment+: {
-    spec+: {
-      template+: {
-        spec+: {
-          securityContext+: {
-            runAsUser: 10001,
-          },
-        },
-      },
-    },
-  },
-};
+local bucket = thanos.bucket(params.commonConfig + params.bucket);
 
 if params.bucket.enabled then {
   ['bucket/' + name]: bucket[name]

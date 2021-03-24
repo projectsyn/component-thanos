@@ -10,17 +10,6 @@ local params = inv.parameters.thanos;
 local query = thanos.query(params.commonConfig + params.query {
   [if params.store.enabled then 'stores']+: [ 'dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % params.namespace ],
 }) {
-  deployment+: {
-    spec+: {
-      template+: {
-        spec+: {
-          securityContext+: {
-            runAsUser: 10001,
-          },
-        },
-      },
-    },
-  },
   alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-query-alerts') {
     metadata+: {
       namespace: params.namespace,
@@ -28,7 +17,7 @@ local query = thanos.query(params.commonConfig + params.query {
     spec+: {
       groups+:
         std.filter(
-          function(group) group.name == 'thanos-query.rules',
+          function(group) group.name == 'thanos-query',
           thanosMixin.prometheusAlerts.groups
         ),
     },

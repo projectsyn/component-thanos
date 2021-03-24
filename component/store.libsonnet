@@ -8,17 +8,6 @@ local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
 local store = thanos.store(params.commonConfig + params.store) {
-  statefulSet+: {
-    spec+: {
-      template+: {
-        spec+: {
-          securityContext+: {
-            runAsUser: 10001,
-          },
-        },
-      },
-    },
-  },
   alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-store-alerts') {
     metadata+: {
       namespace: params.namespace,
@@ -26,7 +15,7 @@ local store = thanos.store(params.commonConfig + params.store) {
     spec+: {
       groups+:
         std.filter(
-          function(group) group.name == 'thanos-store.rules',
+          function(group) group.name == 'thanos-store',
           thanosMixin.prometheusAlerts.groups
         ),
     },
