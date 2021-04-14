@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [v1.0.0]
+
 ### Added
 
 - Initial implementation ([#1])
@@ -17,12 +20,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disable dashboards by default ([#1])
 - Upgrade to v0.18.0 ([#2])
 - Update dependencies ([#6])
+- Update dependencies ([#7])
 
 ### Fixed
 
 - Render compactor alert rules ([#5])
 
-[Unreleased]: https://github.com/projectsyn/component-thanos/compare/38735201e88d2b0bc7022dd65587bc516780946c...HEAD
+[Unreleased]: https://github.com/projectsyn/component-thanos/compare/v1.0.0...HEAD
+[v1.0.0]: https://github.com/projectsyn/component-thanos/releases/tag/v1.0.0
 
 [#1]: https://github.com/projectsyn/component-thanos/pulls/1
 [#2]: https://github.com/projectsyn/component-thanos/pulls/2
@@ -30,3 +35,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#4]: https://github.com/projectsyn/component-thanos/pulls/4
 [#5]: https://github.com/projectsyn/component-thanos/pulls/5
 [#6]: https://github.com/projectsyn/component-thanos/pulls/6
+[#7]: https://github.com/projectsyn/component-thanos/pulls/7
