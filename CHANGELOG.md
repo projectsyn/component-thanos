@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.1.0]
+### Fixed
+Fix dependency conflict with kube-prometheus ([#9])
+
 ## [v1.0.0]
 
 ### Added
@@ -27,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Render compactor alert rules ([#5])
 
 [Unreleased]: https://github.com/projectsyn/component-thanos/compare/v1.0.0...HEAD
+[v1.1.0]: https://github.com/projectsyn/component-thanos/releases/tag/v1.1.0
 [v1.0.0]: https://github.com/projectsyn/component-thanos/releases/tag/v1.0.0
 
 [#1]: https://github.com/projectsyn/component-thanos/pulls/1
@@ -36,3 +41,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [#5]: https://github.com/projectsyn/component-thanos/pulls/5
 [#6]: https://github.com/projectsyn/component-thanos/pulls/6
 [#7]: https://github.com/projectsyn/component-thanos/pulls/7
+[#9]: https://github.com/projectsyn/component-thanos/pulls/9
