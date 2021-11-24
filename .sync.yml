@@ -1,0 +1,13 @@
+:global:
+  componentName: thanos
+  githubUrl: https://github.com/projectsyn/component-thanos
+  feature_goUnitTests: false
+  feature_goldenTests: true
+
+docs/antora.yml:
+  name: thanos
+  title: Thanos
+
+.gitignore:
+  additionalEntries:
+    - jsonnetfile.json
