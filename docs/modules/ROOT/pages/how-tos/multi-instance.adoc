@@ -1,0 +1,82 @@
+= Deploy Multiple Instances
+
+This guide describes how to install multiple instances of this component.
+
+There are generally two different approaches:
+
+. Deploy multiple instances in separate namespaces.
+  This approach is recommended if you have completely isolated setups of Thanos (for example staging and production instances).
+
+. Deploy multiple instances in the same namespace.
+  This approach is recommended when you need to deploy certain Thanos components multiple times, for example one Thanos Store per S3 bucket used by only one Thanos Querier.
+
+== Separate namespaces
+
+Using this approach each instance gets deployed into its own namespace.
+This is a simple as setting the `namespace` parameter and every deployment or manifest is isolated.
+
+.Example configuration for separate namespaces
+[source,yaml]
+----
+applications:
+- thanos as thanos-test
+- thanos as thanos-prod
+
+parameters:
+  thanos_test:
+    namespace: syn-thanos-test
+    ...
+    dashboards:
+      namespace: grafana <1>
+
+  thanos_prod:
+    namespace: syn-thanos-prod
+    ...
+    dashboards:
+      namespace: grafana <1>
+----
+<1> A shared namespace where dashboards get installed, depending on your Grafana setup (if any).
+    Otherwise this parameter isn't necessary.
+
+== Same namespace
+
+Using this approach each instance is deployed in the same namespace.
+Special care needs to be given in the configuration, otherwise there will be name collisions.
+
+.Example configuration for shared namespace with multiple Stores
+[source,yaml]
+----
+applications:
+  - thanos
+  - thanos as thanos-store-1
+  - thanos as thanos-store-2
+
+parameters:
+  thanos: <1>
+    ...
+
+  thanos_store_1:
+    commonConfig:
+      objectStorageConfig:
+        name: thanos-objectstorage-1 <2>
+    objectStorageConfig:
+      type: S3
+      config:
+        bucket: bucket-1
+        endpoint: s3.example.com
+        access_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/access_key_1}
+        secret_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/secret_key_1}
+    store:
+      enabled: true
+      name: thanos-store-1 <2>
+    query:
+      enabled: false
+    bucket:
+      enabled: true
+      name: thanos-bucket-1 <2>
+
+  thanos_store_2:
+    ...
+----
+<1> The configuration of the common Thanos setup as required
+<2> The resource name that must be different in each instance to avoid name collisions between instances
