@@ -7,8 +7,23 @@ local kube = import 'lib/kube.libjsonnet';
 local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
-local query = thanos.query(params.commonConfig + params.query {
-  [if params.store.enabled then 'stores']+: [ 'dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % params.namespace ],
+local extraStores = std.filter(
+  function(it) it != null,
+  [
+    if params.store.enabled then
+      'dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % params.namespace,
+  ]
+);
+
+// Ensure we don't inherit any stores configured by kube-thanos by making sure
+// we overwrite the kube-thanos defaults value of the `stores` key before
+// merging our config over it.
+local queryBaseConfig = { stores: [] };
+
+local query = thanos.query(queryBaseConfig + params.commonConfig + params.query {
+  // Configure the stores that should be enabled to make the querier work
+  // with the other components deployed through this component.
+  stores+: extraStores,
 }) {
   alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-query-alerts') {
     metadata+: {
