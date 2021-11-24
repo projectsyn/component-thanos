@@ -30,6 +30,7 @@ parameters:
               storage: 10Gi
     objectStorageConfig: {}
     query:
+      enabled: true
       replicas: 2
       serviceType: ClusterIP
       replicaLabels:
