@@ -86,6 +86,14 @@ See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet
 
 Especially the `stores` list is important as it needs to be populated by the Thanos store API endpoints this Query should use.
 
+=== `enabled`
+
+[horizontal]
+type:: bool
+default:: `true`
+
+If the Query component should be deployed.
+
 === `serviceType`
 
 [horizontal]

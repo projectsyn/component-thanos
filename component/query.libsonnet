@@ -29,7 +29,7 @@ local query = thanos.query(params.commonConfig + params.query {
   },
 };
 
-{
+if params.query.enabled then {
   ['query/' + name]: query[name]
   for name in std.objectFields(query)
-}
+} else {}
