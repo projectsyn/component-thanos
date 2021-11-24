@@ -10,6 +10,47 @@ default:: `syn-thanos`
 
 The namespace in which to deploy this component.
 
+== `cluster_kubernetes_version`
+
+[horizontal]
+type:: string
+default:: `"1.18"`
+
+The Kubernetes version of the cluster on which the component is deployed.
+
+== `jsonnetfile_parameters`
+
+[horizontal]
+type:: dict
+
+Parameters for rendering the `jsonnetfile.jsonnet`.
+We pass parameter `cluster_kubernetes_version` and cluster fact `distribution` to Jsonnet to enable smart dependency version selection for the `kube-thanos` and `thanos-mixin` Jsonnet libraries.
+
+This is necessary because we need to ensure that this component and other components (for example `rancher-monitoring` and `openshift4-monitoring`) use the same `kube-thanos` and `thanos-mixin` library versions.
+
+Otherwise we get random changes in the cluster catalog at best and incompatible library versions at worst depending on which dependency version wins when `jsonnet-bundler` fetches the Jsonnet libraries.
+
+=== `jsonnetfile_parameters.thanos_mixin_version`
+
+[horizontal]
+type:: string
+default:: `''`
+
+This parameter is used as the library version for `thanos-mixin` over the autodetected version based on the cluster's Kubernetes version and distribution.
+
+Only set this parameter if you really need a specific `thanos-mixin` version for this component and have read the parameter description for `jsonnetfile_parameters` carefully.
+
+=== `jsonnetfile_parameters.kube_thanos_version`
+
+[horizontal]
+type:: string
+default:: `''`
+
+This parameter is used as the library version for `kube-thanos` over the autodetected version based on the cluster's Kubernetes version and distribution.
+
+Only set this parameter if you really need a specific `kube-thanos` version for this component and have read the parameter description for `jsonnetfile_parameters` carefully.
+
+
 == `dashboards.enabled`
 
 [horizontal]
