@@ -9,6 +9,8 @@ type:: string
 default:: `syn-thanos`
 
 The namespace in which to deploy this component.
+Each instance of this component should have its own namespace.
+The default value takes the instance name and ensures that each instance is installed in its own namespace.
 
 == `cluster_kubernetes_version`
 
@@ -67,6 +69,7 @@ type:: string
 default:: `syn-thanos`
 
 The namespace in which to create the Grafana dashboard ConfigMaps.
+Multiple instances should't share the same dashboard namespace to avoid name collisions.
 
 == `commonConfig`
 
