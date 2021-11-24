@@ -1,20 +1,12 @@
 parameters:
   thanos:
     namespace: syn-thanos
-    # To get the hash:
-    # For each kubernetes version check the release version of kube-prometheus here:
-    # https://github.com/projectsyn/component-rancher-monitoring/blob/master/class/defaults.yml#L5
-    # Then get the hash from: https://github.com/prometheus-operator/kube-prometheus/blob/<release_version>/jsonnetfile.lock.json
-    # Where <release_version> matches the string in the map from the first link
-    thanos_mixin_version:
-      "1.18": "79d8cfdc1a00f8a96475d5d1ff1a852b184b146e"
-      "1.19": "79d8cfdc1a00f8a96475d5d1ff1a852b184b146e"
-      "1.20": "09b36547e5ed61a32a309648a8913bd02c08d3cc"
-      "1.21": "ff363498fc95cfe17de894d7237bcf38bdd0bc36"
-      "1.22": "ff363498fc95cfe17de894d7237bcf38bdd0bc36" # from: https://github.com/prometheus-operator/kube-prometheus/blob/release-0.9/jsonnetfile.lock.json#L144
     cluster_kubernetes_version: "1.18"
     jsonnetfile_parameters:
-      thanos_mixin_version: ${thanos:thanos_mixin_version:${thanos:cluster_kubernetes_version}}
+      kubernetes_version: ${thanos:cluster_kubernetes_version}
+      # Set this parameter if you wish to use a specific thanos-mixin
+      # version.
+      thanos_mixin_version: ''
     dashboards:
       enabled: false
       namespace: ${thanos:namespace}
