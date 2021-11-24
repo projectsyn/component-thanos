@@ -1,0 +1,17 @@
+parameters:
+  thanos:
+    commonConfig:
+      version: v0.23.0
+    query:
+      replicas: 3
+    store:
+      enabled: true
+    bucket:
+      enabled: true
+    objectStorageConfig:
+      type: S3
+      config:
+        bucket: thanos-metrics
+        endpoint: s3.example.com
+        access_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/access_key}
+        secret_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/secret_key}
