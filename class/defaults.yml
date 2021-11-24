@@ -4,9 +4,13 @@ parameters:
     cluster_kubernetes_version: "1.18"
     jsonnetfile_parameters:
       kubernetes_version: ${thanos:cluster_kubernetes_version}
+      distribution: ${facts:distribution}
       # Set this parameter if you wish to use a specific thanos-mixin
       # version.
       thanos_mixin_version: ''
+      # Set this parameter if you wish to use a specific kube-thanos
+      # version.
+      kube_thanos_version: ''
     dashboards:
       enabled: false
       namespace: ${thanos:namespace}

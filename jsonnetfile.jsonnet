@@ -11,7 +11,20 @@ local thanos_mixin_version_map = {
   '1.22': 'ff363498fc95cfe17de894d7237bcf38bdd0bc36',  // from: https://github.com/prometheus-operator/kube-prometheus/blob/release-0.9/jsonnetfile.lock.json#L144
 };
 
+// To get the kube-thanos versions which are compatible with OCP4.x:
+// Check the kube-thanos dependency version for each OCP4.x version in
+// https://github.com/openshift/cluster-monitoring-operator in file
+// https://github.com/openshift/cluster-monitoring-operator/blob/release-4.x/jsonnet/jsonnetfile.json
+// Remember to map from OCP 4.x to K8s 1.x (4.7 -> 1.20, etc.)
+// Note: We don't support OCP < 4.7, since OCP 4.6 and older are EOL.
+local kube_thanos_version_map = {
+  '1.20': 'release-0.17',  // corresponds to v0.17.0
+  '1.21': 'release-0.19',  // corresponds to v0.19.0
+  '1.22': 'release-0.22',  // corresponds to v0.22.0
+};
+
 local k8s_version = std.extVar('kubernetes_version');
+local distribution = std.extVar('distribution');
 
 local thanos_mixin_extver = std.extVar('thanos_mixin_version');
 local thanos_mixin_version =
@@ -23,6 +36,18 @@ local thanos_mixin_version =
     // Use most recent version if we didn't find an entry in the map
     thanos_mixin_version_map['1.22'];
 
+local kube_thanos_extver = std.extVar('kube_thanos_version');
+local kube_thanos_version =
+  if kube_thanos_extver != '' then
+    kube_thanos_extver
+  else if (
+    distribution == 'openshift4' &&
+    std.objectHas(kube_thanos_version_map, k8s_version)
+  ) then
+    kube_thanos_version_map[k8s_version]
+  else
+    'v0.23.0';
+
 {
   version: 1,
   dependencies: [
@@ -33,7 +58,7 @@ local thanos_mixin_version =
           subdir: 'jsonnet/kube-thanos',
         },
       },
-      version: 'v0.23.0',
+      version: kube_thanos_version,
     },
     {
       source: {
