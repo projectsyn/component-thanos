@@ -69,7 +69,6 @@ type:: string
 default:: `syn-thanos`
 
 The namespace in which to create the Grafana dashboard ConfigMaps.
-Multiple instances should't share the same dashboard namespace to avoid name collisions.
 
 == `commonConfig`
 
