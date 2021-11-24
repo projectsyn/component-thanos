@@ -1,0 +1,14 @@
+apiVersion: v1
+data: {}
+kind: Secret
+metadata:
+  annotations: {}
+  labels:
+    name: thanos-objectstorage
+  name: thanos-objectstorage
+  namespace: syn-thanos
+stringData:
+  thanos.yaml: "\"config\":\n  \"access_key\": \"t-silent-test-1234/c-green-test-1234/thanos/access_key\"\
+    \n  \"bucket\": \"thanos-metrics\"\n  \"endpoint\": \"s3.example.com\"\n  \"secret_key\"\
+    : \"t-silent-test-1234/c-green-test-1234/thanos/secret_key\"\n\"type\": \"S3\""
+type: Opaque
