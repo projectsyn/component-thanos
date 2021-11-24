@@ -1,0 +1,20 @@
+parameters:
+  thanos:
+    commonConfig:
+      objectStorageConfig:
+        name: thanos-objectstorage-1
+    objectStorageConfig:
+      type: S3
+      config:
+        bucket: bucket-1
+        endpoint: s3.example.com
+        access_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/access_key_1}
+        secret_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/secret_key_1}
+    store:
+      enabled: true
+      name: thanos-store-1
+    query:
+      enabled: false
+    bucket:
+      enabled: true
+      name: thanos-bucket-1
