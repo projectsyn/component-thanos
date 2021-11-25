@@ -1,2 +1,7 @@
 * xref:index.adoc[Home]
+
+.How-to
+* xref:how-tos/multi-instance.adoc[Deploy Multiple Instances]
+
+.Technical reference
 * xref:references/parameters.adoc[Parameters]

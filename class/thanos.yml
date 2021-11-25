@@ -8,4 +8,4 @@ parameters:
       - input_paths:
           - thanos/component/main.jsonnet
         input_type: jsonnet
-        output_path: thanos/
+        output_path: ${_instance}
