@@ -56,6 +56,7 @@ parameters:
     ...
 
   thanos_store_1:
+    createNamespace: false <3>
     commonConfig:
       objectStorageConfig:
         name: thanos-objectstorage-1 <2>
@@ -80,3 +81,4 @@ parameters:
 ----
 <1> The configuration of the common Thanos setup as required
 <2> The resource name that must be different in each instance to avoid name collisions between instances
+<3> This is required for all but one instance
