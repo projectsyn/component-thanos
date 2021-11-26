@@ -12,6 +12,8 @@ local extraStores = std.filter(
   [
     if params.store.enabled then
       'dnssrv+_grpc._tcp.thanos-store.%s.svc.cluster.local' % params.namespace,
+    if params.receive.enabled then
+      'dnssrv+_grpc._tcp.thanos-receive.%s.svc.cluster.local' % params.namespace,
   ]
 );
 

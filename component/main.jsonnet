@@ -22,5 +22,6 @@ local configureObjStore = std.objectHas(params.objectStorageConfig, 'type');
 + (import 'bucket.libsonnet')
 + (import 'compactor.libsonnet')
 + (import 'dashboards.libsonnet')
++ (import 'receive.libsonnet')
 + (import 'query.libsonnet')
 + (import 'store.libsonnet')

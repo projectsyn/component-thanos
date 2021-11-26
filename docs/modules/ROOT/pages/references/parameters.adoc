@@ -163,6 +163,19 @@ default:: `false`
 If the Bucket Web component should be deployed.
 It will require an `objectStorageConfig` if enabled.
 
+== `receive`
+
+[horizontal]
+type:: dict
+
+Configuration for the Thanos https://thanos.io/v0.23/components/receive.md/[Receiver] component.
+See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
+
+=== `enabled`
+
+If the Receiver component should be deployed.
+It will require an `objectStorageConfig` if enabled.
+
 == `images`
 
 [horizontal]
