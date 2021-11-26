@@ -9,7 +9,7 @@ local configureObjStore = std.objectHas(params.objectStorageConfig, 'type');
 
 
 {
-  '00_namespace': kube.Namespace(params.namespace),
+  [if !params.namespaceDisabled then '00_namespace']: kube.Namespace(params.namespace),
   [if configureObjStore then '40_thanos_objstore']: kube.Secret(params.commonConfig.objectStorageConfig.name) {
     metadata+: {
       namespace: params.namespace,

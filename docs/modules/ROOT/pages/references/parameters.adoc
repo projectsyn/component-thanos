@@ -10,6 +10,15 @@ default:: `syn-thanos`
 
 The namespace in which to deploy this component.
 
+== `namespaceDisabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+If true, no namespace will be created.
+Required if the namespace is managed externally.
+
 == `cluster_kubernetes_version`
 
 [horizontal]

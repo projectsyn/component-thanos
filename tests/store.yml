@@ -1,5 +1,6 @@
 parameters:
   thanos:
+    namespaceDisabled: true
     commonConfig:
       objectStorageConfig:
         name: thanos-objectstorage-1

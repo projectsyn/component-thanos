@@ -2,6 +2,7 @@ parameters:
   thanos:
     multi_instance: true
     namespace: syn-thanos
+    namespaceDisabled: false
     cluster_kubernetes_version: "1.18"
     jsonnetfile_parameters:
       kubernetes_version: ${thanos:cluster_kubernetes_version}
