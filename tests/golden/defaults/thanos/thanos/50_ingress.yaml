@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-production
+  labels:
+    name: thanos
+  name: thanos
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: thanos-auth
+                port:
+                  number: 9090
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - thanos.example.com
+      secretName: thanos-tls

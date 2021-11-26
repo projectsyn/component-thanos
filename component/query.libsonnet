@@ -17,6 +17,35 @@ local extraStores = std.filter(
   ]
 );
 
+local proxyImage = params.images.kubeRbacProxy;
+local proxyContainer = {
+  name: 'kube-rbac-proxy',
+  image: '%s/%s:%s' % [ proxyImage.registry, proxyImage.image, proxyImage.tag ],
+  args: [
+    '--upstream=0.0.0.0:9090',
+    '--insecure-listen-address=0.0.0.0:%s' % params.queryRbacProxy.port,
+    '--secure-listen-address=0.0.0.0:8443',
+    '--logtostderr=true',
+    '--v=2',
+  ],
+  ports: [
+    {
+      containerPort: params.queryRbacProxy.port,
+      name: 'proxy',
+    },
+    {
+      containerPort: 8443,
+      name: 'secure-proxy',
+    },
+  ],
+  volumeMounts: [
+    {
+      name: 'config',
+      mountPath: '/etc/kube-rbac-proxy',
+    },
+  ],
+};
+
 // Ensure we don't inherit any stores configured by kube-thanos by making sure
 // we overwrite the kube-thanos defaults value of the `stores` key before
 // merging our config over it.
@@ -44,9 +73,68 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
       type: params.query.serviceType,
     },
   },
+  deployment+: {
+    spec+: {
+      template+: {
+        spec+: {
+          containers+: if params.queryRbacProxy.enabled then [ proxyContainer ] else [],
+        },
+      },
+    },
+  },
 };
 
-if params.query.enabled then {
+// This Service is intended to be between Ingress and the proxy sidecar of the Querier.
+local proxyService = kube.Service(params.queryRbacProxy.serviceName) {
+  spec+: {
+    ports: [
+      {
+        name: 'proxy',
+        port: params.queryRbacProxy.port,
+        targetPort: params.queryRbacProxy.port,
+      },
+    ],
+  },
+  target_pod: query.deployment.spec.template,
+};
+
+// This Role grants the RBAC proxy to review access on behalf of the client.
+local proxyRole = kube.Role(params.queryRbacProxy.serviceName) {
+  rules+: [
+    {
+      apiGroups: [ 'authentication.k8s.io' ],
+      resources: [ 'tokenreviews' ],
+      verbs: [ 'create' ],
+    },
+    {
+      apiGroups: [ 'authorization.k8s.io' ],
+      resources: [ 'subjectaccessreviews' ],
+      verbs: [ 'create' ],
+    },
+  ],
+};
+
+// This RoleBinding binds the Querier SA to the previous role
+local proxyRoleBinding = kube.RoleBinding(params.queryRbacProxy.serviceName) {
+  roleRef: {
+    apiGroup: 'rbac.authorization.k8s.io',
+    kind: 'Role',
+    name: proxyRole.metadata.name,
+  },
+  subjects+: [
+    {
+      kind: 'ServiceAccount',
+      name: query.serviceAccount.metadata.name,
+      namespace: query.serviceAccount.metadata.namespace,
+    },
+  ],
+};
+
+local queryArtifacts = if params.query.enabled then {
   ['query/' + name]: query[name]
   for name in std.objectFields(query)
-} else {}
+} else {};
+
+{
+  [if params.query.enabled && params.queryRbacProxy.enabled then '51_auth-proxy']: [ proxyService, proxyRole, proxyRoleBinding ],
+} + queryArtifacts

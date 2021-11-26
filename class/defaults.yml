@@ -74,3 +74,8 @@ parameters:
         registry: quay.io
         image: thanos/thanos
         tag: ${thanos:commonConfig:version}
+      kubeRbacProxy:
+        # this is the same as grc.io/kubebuilder/kube-rbac-proxy, but more recent.
+        registry: quay.io
+        image: brancz/kube-rbac-proxy
+        tag: v0.11.0
