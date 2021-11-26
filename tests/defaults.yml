@@ -1,7 +1,5 @@
 parameters:
   thanos:
-    commonConfig:
-      version: v0.23.0
     query:
       replicas: 3
     store:
@@ -15,3 +13,8 @@ parameters:
         endpoint: s3.example.com
         access_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/access_key}
         secret_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/secret_key}
+    ingress:
+      enabled: true
+      host: thanos.example.com
+    queryRbacProxy:
+      enabled: true

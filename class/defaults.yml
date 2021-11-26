@@ -38,6 +38,18 @@ parameters:
       replicaLabels:
         - prometheus_replica
         - rule_replica
+    queryRbacProxy:
+      serviceName: ${_instance}-auth
+      enabled: false
+      port: 8080
+    ingress:
+      enabled: false
+      serviceName: ${_instance}-auth
+      servicePort: ${thanos:queryRbacProxy:port}
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-production
+      secretName: ${_instance}-tls
+      host: ""
     bucket:
       enabled: false
       replicas: 1
