@@ -10,6 +10,15 @@ default:: `syn-thanos`
 
 The namespace in which to deploy this component.
 
+== `createNamespace`
+
+[horizontal]
+type:: bool
+default:: `true`
+
+If this parameter is set to `false, the component won't create the specified namespace.
+This is required for all but one instance if multiple component instances are deployed into the same namespace.
+
 == `cluster_kubernetes_version`
 
 [horizontal]
