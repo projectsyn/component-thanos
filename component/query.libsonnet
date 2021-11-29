@@ -38,12 +38,6 @@ local proxyContainer = {
       name: 'secure-proxy',
     },
   ],
-  volumeMounts: [
-    {
-      name: 'config',
-      mountPath: '/etc/kube-rbac-proxy',
-    },
-  ],
 };
 
 // Ensure we don't inherit any stores configured by kube-thanos by making sure

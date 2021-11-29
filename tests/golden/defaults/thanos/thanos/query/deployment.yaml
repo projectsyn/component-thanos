@@ -89,9 +89,6 @@ spec:
               name: proxy
             - containerPort: 8443
               name: secure-proxy
-          volumeMounts:
-            - mountPath: /etc/kube-rbac-proxy
-              name: config
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
