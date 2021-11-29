@@ -15,6 +15,7 @@ parameters:
         secret_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/secret_key}
     ingress:
       enabled: true
+      annotations: null
       host: thanos.example.com
     queryRbacProxy:
       enabled: true

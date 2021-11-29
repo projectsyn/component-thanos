@@ -6,13 +6,17 @@ local inv = kap.inventory();
 local params = inv.parameters.thanos;
 local instance = inv.parameters._instance;
 
+local hostName = if std.length(params.ingress.host) == 0 then error 'ingress.host cannot be empty' else params.ingress.host;
+
 local ingress = kube.Ingress('%s' % instance) {
+  apiVersion: 'networking.k8s.io/v1',  // kube.Ingress creates version with 'v1beta1'
   metadata+: {
-    annotations: params.ingress.annotations,
+    annotations: if params.ingress.annotations != null then params.ingress.annotations else {},
   },
   spec+: {
     rules+: [
       {
+        host: hostName,
         http: {
           paths: [
             {
@@ -22,7 +26,7 @@ local ingress = kube.Ingress('%s' % instance) {
                 service: {
                   name: params.ingress.serviceName,
                   port: {
-                    number: 9090,
+                    number: params.ingress.servicePort,
                   },
                 },
               },
@@ -33,9 +37,7 @@ local ingress = kube.Ingress('%s' % instance) {
     ],
     tls+: [
       {
-        hosts: [
-          if std.length(params.ingress.host) == 0 then error 'ingress.host cannot be empty' else params.ingress.host,
-        ],
+        hosts: [ hostName ],
         secretName: params.ingress.secretName,
       },
     ],

@@ -22,7 +22,7 @@ local proxyContainer = {
   name: 'kube-rbac-proxy',
   image: '%s/%s:%s' % [ proxyImage.registry, proxyImage.image, proxyImage.tag ],
   args: [
-    '--upstream=0.0.0.0:9090',
+    '--upstream=http://0.0.0.0:9090',
     '--insecure-listen-address=0.0.0.0:%s' % params.queryRbacProxy.port,
     '--secure-listen-address=0.0.0.0:8443',
     '--logtostderr=true',
