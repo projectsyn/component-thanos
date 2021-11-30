@@ -74,8 +74,8 @@ parameters:
         registry: quay.io
         image: thanos/thanos
         tag: ${thanos:commonConfig:version}
-      kubeRbacProxy:
-        # this is the same as grc.io/kubebuilder/kube-rbac-proxy, but more recent.
-        registry: quay.io
-        image: brancz/kube-rbac-proxy
-        tag: v0.11.0
+      oauthProxy:
+        # See supported tags with `oc -n openshift get imagestream oauth-proxy`
+        registry: image-registry.openshift-image-registry.svc:5000
+        image: openshift/oauth-proxy
+        tag: v4.4

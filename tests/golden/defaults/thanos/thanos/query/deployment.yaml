@@ -78,12 +78,13 @@ spec:
           terminationMessagePolicy: FallbackToLogsOnError
         - args:
             - --upstream=http://0.0.0.0:9090
-            - --insecure-listen-address=0.0.0.0:8080
-            - --secure-listen-address=0.0.0.0:8443
-            - --logtostderr=true
-            - --v=2
-          image: quay.io/brancz/kube-rbac-proxy:v0.11.0
-          name: kube-rbac-proxy
+            - --http-address=http://:8080
+            - --https-address=https://:8443
+            - --provider=openshift
+            - --openshift-service-account='thanos-query'
+            - --openshift-sar='{"namespace":"syn-thanos","resource":"service","name":"thanos-auth","verb":"update"'
+          image: image-registry.openshift-image-registry.svc:5000/openshift/oauth-proxy:v4.4
+          name: openshift-oauth-proxy
           ports:
             - containerPort: 8080
               name: proxy

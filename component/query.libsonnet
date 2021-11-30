@@ -17,28 +17,7 @@ local extraStores = std.filter(
   ]
 );
 
-local proxyImage = params.images.kubeRbacProxy;
-local proxyContainer = {
-  name: 'kube-rbac-proxy',
-  image: '%s/%s:%s' % [ proxyImage.registry, proxyImage.image, proxyImage.tag ],
-  args: [
-    '--upstream=http://0.0.0.0:9090',
-    '--insecure-listen-address=0.0.0.0:%s' % params.queryRbacProxy.port,
-    '--secure-listen-address=0.0.0.0:8443',
-    '--logtostderr=true',
-    '--v=2',
-  ],
-  ports: [
-    {
-      containerPort: params.queryRbacProxy.port,
-      name: 'proxy',
-    },
-    {
-      containerPort: 8443,
-      name: 'secure-proxy',
-    },
-  ],
-};
+local proxyImage = params.images.oauthProxy;
 
 // Ensure we don't inherit any stores configured by kube-thanos by making sure
 // we overwrite the kube-thanos defaults value of the `stores` key before
@@ -71,7 +50,31 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
     spec+: {
       template+: {
         spec+: {
-          containers+: if params.queryRbacProxy.enabled then [ proxyContainer ] else [],
+          containers+: if params.queryRbacProxy.enabled then [
+            {
+              name: 'openshift-oauth-proxy',
+              image: '%s/%s:%s' % [ proxyImage.registry, proxyImage.image, proxyImage.tag ],
+              args: [
+                '--upstream=http://0.0.0.0:9090',
+                '--http-address=http://:%s' % params.queryRbacProxy.port,
+                '--https-address=https://:8443',
+                '--provider=openshift',
+                "--openshift-service-account='%s'" % 'thanos-query',  // How to access the `service.name` from merged config?
+                // TODO: replace with `std.manifestJsonMinified({...})` once released with newer jsonnet
+                '--openshift-sar=\'{"namespace":"%s","resource":"service","name":"%s","verb":"update"\'' % [ params.namespace, params.queryRbacProxy.serviceName ],
+              ],
+              ports: [
+                {
+                  containerPort: params.queryRbacProxy.port,
+                  name: 'proxy',
+                },
+                {
+                  containerPort: 8443,
+                  name: 'secure-proxy',
+                },
+              ],
+            },
+          ] else [],
         },
       },
     },
