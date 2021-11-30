@@ -42,6 +42,7 @@ parameters:
       serviceName: ${_instance}-auth
       enabled: false
       port: 8080
+      redirectUri: https://${thanos:ingress:host}
     ingress:
       enabled: false
       serviceName: ${_instance}-auth

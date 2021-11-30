@@ -6,6 +6,7 @@ local kube = import 'lib/kube.libjsonnet';
 
 local inv = kap.inventory();
 local params = inv.parameters.thanos;
+local instance = inv.parameters._instance;
 
 local extraStores = std.filter(
   function(it) it != null,
@@ -46,6 +47,17 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
       type: params.query.serviceType,
     },
   },
+  serviceAccount+: {
+    metadata+: {
+      annotations+: if params.queryRbacProxy.enabled then {
+        'serviceaccounts.openshift.io/oauth-redirecturi.primary': params.queryRbacProxy.redirectUri,
+        // there is also another annotation:
+        //  serviceaccounts.openshift.io/oauth-redirectreference.primary: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"<route-name>"}}'
+        // However, using an Ingress object generates a randomized Route name, and setting `kind: Ingress` didn't work.
+        // So we have to give an static URL.
+      },
+    },
+  },
   deployment+: {
     spec+: {
       template+: {
@@ -56,21 +68,19 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
               image: '%s/%s:%s' % [ proxyImage.registry, proxyImage.image, proxyImage.tag ],
               args: [
                 '--upstream=http://0.0.0.0:9090',
-                '--http-address=http://:%s' % params.queryRbacProxy.port,
-                '--https-address=https://:8443',
                 '--provider=openshift',
-                "--openshift-service-account='%s'" % 'thanos-query',  // How to access the `service.name` from merged config?
-                // TODO: replace with `std.manifestJsonMinified({...})` once released with newer jsonnet
-                '--openshift-sar=\'{"namespace":"%s","resource":"service","name":"%s","verb":"update"\'' % [ params.namespace, params.queryRbacProxy.serviceName ],
+                '--cookie-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token',
+                '--openshift-service-account=%s' % 'thanos-query',
+                // TODO: Replace JSON below with `std.manifestJsonMinified({...}})` once available in newer jsonnet version
+                // Only cluster-admins should be able to get system resources
+                '--openshift-sar={"namespace":"%s","resource":"services","name":"%s","verb":"get"}' % [ params.namespace, params.queryRbacProxy.serviceName ],
+                '--http-address=http://:%s' % params.queryRbacProxy.port,
+                '--https-address=',
               ],
               ports: [
                 {
                   containerPort: params.queryRbacProxy.port,
                   name: 'proxy',
-                },
-                {
-                  containerPort: 8443,
-                  name: 'secure-proxy',
                 },
               ],
             },

@@ -78,18 +78,17 @@ spec:
           terminationMessagePolicy: FallbackToLogsOnError
         - args:
             - --upstream=http://0.0.0.0:9090
-            - --http-address=http://:8080
-            - --https-address=https://:8443
             - --provider=openshift
-            - --openshift-service-account='thanos-query'
-            - --openshift-sar='{"namespace":"syn-thanos","resource":"service","name":"thanos-auth","verb":"update"'
+            - --cookie-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token
+            - --openshift-service-account=thanos-query
+            - --openshift-sar={"namespace":"syn-thanos","resource":"services","name":"thanos-auth","verb":"get"}
+            - --http-address=http://:8080
+            - --https-address=
           image: image-registry.openshift-image-registry.svc:5000/openshift/oauth-proxy:v4.4
           name: openshift-oauth-proxy
           ports:
             - containerPort: 8080
               name: proxy
-            - containerPort: 8443
-              name: secure-proxy
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
