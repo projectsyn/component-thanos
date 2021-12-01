@@ -76,7 +76,9 @@ parameters:
         image: thanos/thanos
         tag: ${thanos:commonConfig:version}
       oauthProxy:
-        # See supported tags with `oc -n openshift get imagestream oauth-proxy`
-        registry: image-registry.openshift-image-registry.svc:5000
-        image: openshift/oauth-proxy
-        tag: v4.4
+        # There's also the same image available in the internal registry `image-registry.openshift-image-registry.svc:5000`.
+        # Supported tags can be retrieved with `oc -n openshift get imagestream oauth-proxy`.
+        registry: quay.io
+        # Source: https://quay.io/repository/openshift/origin-oauth-proxy (which is indeed from https://github.com/openshift/oauth-proxy)
+        image: openshift/origin-oauth-proxy
+        tag: '4.9'
