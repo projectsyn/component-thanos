@@ -7,6 +7,5 @@ parameters:
         output_path: apps/
       - input_paths:
           - thanos/component/main.jsonnet
-          - thanos/component/ingress.jsonnet
         input_type: jsonnet
         output_path: ${_instance}
