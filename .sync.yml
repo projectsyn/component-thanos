@@ -10,6 +10,7 @@
     entries:
       - defaults
       - store
+      - openshift-rbac-proxy
   makeTarget: test -e instance=${{ matrix.provider }}
   goldenTest_makeTarget: golden-diff -e instance=${{ matrix.provider }}
 
