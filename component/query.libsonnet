@@ -105,43 +105,11 @@ local proxyService = kube.Service(params.queryRbacProxy.serviceName) {
   target_pod: query.deployment.spec.template,
 };
 
-// This Role grants the RBAC proxy to review access on behalf of the client.
-local proxyRole = kube.Role(params.queryRbacProxy.serviceName) {
-  rules+: [
-    {
-      apiGroups: [ 'authentication.k8s.io' ],
-      resources: [ 'tokenreviews' ],
-      verbs: [ 'create' ],
-    },
-    {
-      apiGroups: [ 'authorization.k8s.io' ],
-      resources: [ 'subjectaccessreviews' ],
-      verbs: [ 'create' ],
-    },
-  ],
-};
-
-// This RoleBinding binds the Querier SA to the previous role
-local proxyRoleBinding = kube.RoleBinding(params.queryRbacProxy.serviceName) {
-  roleRef: {
-    apiGroup: 'rbac.authorization.k8s.io',
-    kind: 'Role',
-    name: proxyRole.metadata.name,
-  },
-  subjects+: [
-    {
-      kind: 'ServiceAccount',
-      name: query.serviceAccount.metadata.name,
-      namespace: query.serviceAccount.metadata.namespace,
-    },
-  ],
-};
-
 local queryArtifacts = if params.query.enabled then {
   ['query/' + name]: query[name]
   for name in std.objectFields(query)
 } else {};
 
 {
-  [if params.query.enabled && params.queryRbacProxy.enabled then '51_auth-proxy']: [ proxyService, proxyRole, proxyRoleBinding ],
+  [if params.query.enabled && params.queryRbacProxy.enabled then '51_auth-proxy']: [ proxyService ],
 } + queryArtifacts
