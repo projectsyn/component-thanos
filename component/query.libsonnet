@@ -113,7 +113,7 @@ local proxyService = kube.Service('%s-auth' % instance) {
 };
 
 local ingress = params.queryRbacProxy.ingress;
-local proxyIngress = kube.Ingress(instance) {
+local proxyIngress = if ingress.enabled then kube.Ingress(instance) {
   assert std.length(ingress.host) > 0 : 'queryRbacProxy.ingress.host in %s (component-thanos) cannot be empty' % instance,
 
   apiVersion: 'networking.k8s.io/v1',  // kube.Ingress creates version with 'v1beta1'
@@ -150,7 +150,7 @@ local proxyIngress = kube.Ingress(instance) {
       },
     ],
   },
-};
+} else {};
 
 local queryArtifacts = if params.query.enabled then {
   ['query/' + name]: query[name]

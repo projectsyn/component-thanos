@@ -12,7 +12,6 @@ parameters:
     queryRbacProxy:
       enabled: true
       ingress:
-        enabled: true
         annotations: null
         host: thanos.example.com
   facts:

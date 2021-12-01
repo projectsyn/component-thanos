@@ -42,7 +42,7 @@ parameters:
       enabled: false
       redirectUri: https://${thanos:queryRbacProxy:ingress:host}
       ingress:
-        enabled: false
+        enabled: true
         host: ""
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt-production

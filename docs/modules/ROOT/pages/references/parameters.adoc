@@ -112,65 +112,6 @@ default:: `ClusterIP`
 Service type for query service.
 Can be used to expose the Query endpoint externally via `LoadBalancer` type.
 
-== `ingress`
-
-[horizontal]
-type:: dict
-
-Configuration of an `Ingress` resource intended to expose the Thanos Query frontend.
-
-=== `enabled`
-
-[horizontal]
-type:: bool
-default:: `false`
-
-Whether the Ingress should be deployed.
-
-=== `host`
-
-[horizontal]
-type:: string
-default:: ``
-required:: yes
-
-The hostname to expose.
-This parameter is required and component compilation fails if it's not provided when `enabled` is `true`.
-
-=== `serviceName`
-
-[horizontal]
-type:: string
-default:: `${_instance}-auth`
-
-The backing service name for the Ingress.
-
-=== `servicePort`
-
-[horizontal]
-type:: int
-default:: `${thanos:queryRbacProxy:port}`
-
-The backing service port for the Ingress.
-
-=== `annotations`
-
-[horizontal]
-type:: dict
-default:: `{cert-manager.io/cluster-issuer: letsencrypt-production}`
-
-The annotations of the Ingress resource.
-
-=== `secretName`
-
-[horizontal]
-type:: dict
-default:: `${_instance}-tls`
-
-The secret name for TLS certificate.
-With default annotations this certificate gets provisioned by Let's Encrypt via cert-manager.
-
-
 == `queryRbacProxy`
 
 [horizontal]
@@ -198,25 +139,42 @@ Whether the RBAC should be deployed.
 
 [horizontal]
 type:: string
-default:: `https://${thanos:ingress:host}`
+default:: `\https://${thanos:ingress:host}`
 
 The URL which OpenShift OAuth redirects back to after successfully authenticating a user.
 
-=== `serviceName`
+=== `ingress`
+
+[horizontal]
+type:: dict
+
+Configuration of an `Ingress` resource to expose the Thanos Query frontend via RBAC proxy.
+
+==== `ingress.enabled`
+
+[horizontal]
+type:: bool
+default:: `true`
+
+Whether the Ingress should be deployed.
+
+==== `ingress.host`
 
 [horizontal]
 type:: string
-default:: `${_instance}-auth`
+required:: yes
 
-The resource name of the additional `Service` object that gets created for exposing the querier via RBAC proxy.
+The hostname to expose.
+This parameter is required and component compilation fails unless `enabled` is `false`.
 
-=== `port`
+==== `ingress.annotations`
 
 [horizontal]
-type:: int
-default:: `8080`
+type:: dict
+default:: `{cert-manager.io/cluster-issuer: letsencrypt-production}`
 
-The port number of the `Service` and proxy sidecar container.
+The annotations of the Ingress resource.
+With default annotations the TLS certificate gets provisioned by Let's Encrypt via cert-manager.
 
 == `objectStorageConfig`
 
