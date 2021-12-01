@@ -39,18 +39,14 @@ parameters:
         - prometheus_replica
         - rule_replica
     queryRbacProxy:
-      serviceName: ${_instance}-auth
       enabled: false
-      port: 8080
-      redirectUri: https://${thanos:ingress:host}
-    ingress:
-      enabled: false
-      serviceName: ${_instance}-auth
-      servicePort: ${thanos:queryRbacProxy:port}
-      annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-production
-      secretName: ${_instance}-tls
-      host: ""
+      redirectUri: https://${thanos:queryRbacProxy:ingress:host}
+      ingress:
+        enabled: false
+        host: ""
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-production
+        labels: {}
     bucket:
       enabled: false
       replicas: 1
@@ -76,8 +72,6 @@ parameters:
         image: thanos/thanos
         tag: ${thanos:commonConfig:version}
       oauthProxy:
-        # There's also the same image available in the internal registry `image-registry.openshift-image-registry.svc:5000`.
-        # Supported tags can be retrieved with `oc -n openshift get imagestream oauth-proxy`.
         registry: quay.io
         # Source: https://quay.io/repository/openshift/origin-oauth-proxy (which is indeed from https://github.com/openshift/oauth-proxy)
         image: openshift/origin-oauth-proxy

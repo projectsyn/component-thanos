@@ -19,6 +19,7 @@ local extraStores = std.filter(
 );
 
 local proxyImage = params.images.oauthProxy;
+local proxyServicePort = 8080;
 
 // Ensure we don't inherit any stores configured by kube-thanos by making sure
 // we overwrite the kube-thanos defaults value of the `stores` key before
@@ -76,13 +77,13 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
                 '--openshift-service-account=%s' % pod.spec.serviceAccountName,
                 // TODO: Replace JSON below with `std.manifestJsonMinified({...}})` once available in newer jsonnet version
                 // Only cluster-admins should be able to get system resources
-                '--openshift-sar={"namespace":"%s","resource":"services","name":"%s","verb":"get"}' % [ params.namespace, params.queryRbacProxy.serviceName ],
-                '--http-address=http://:%s' % params.queryRbacProxy.port,
+                '--openshift-sar={"namespace":"%s","resource":"services","name":"%s-auth","verb":"get"}' % [ params.namespace, instance ],
+                '--http-address=http://:%s' % proxyServicePort,
                 '--https-address=',
               ],
               ports: [
                 {
-                  containerPort: params.queryRbacProxy.port,
+                  containerPort: proxyServicePort,
                   name: 'proxy',
                 },
               ],
@@ -95,17 +96,60 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
 };
 
 // This Service is intended to be between Ingress and the proxy sidecar of the Querier.
-local proxyService = kube.Service(params.queryRbacProxy.serviceName) {
+local proxyService = kube.Service('%s-auth' % instance) {
+  metadata+: {
+    labels+: query.deployment.metadata.labels,
+  },
   spec+: {
     ports: [
       {
         name: 'proxy',
-        port: params.queryRbacProxy.port,
-        targetPort: params.queryRbacProxy.port,
+        port: proxyServicePort,
+        targetPort: proxyServicePort,
       },
     ],
   },
   target_pod: query.deployment.spec.template,
+};
+
+local ingress = params.queryRbacProxy.ingress;
+local proxyIngress = kube.Ingress(instance) {
+  assert std.length(ingress.host) > 0 : 'queryRbacProxy.ingress.host in %s (component-thanos) cannot be empty' % instance,
+
+  apiVersion: 'networking.k8s.io/v1',  // kube.Ingress creates version with 'v1beta1'
+  metadata+: {
+    annotations: if ingress.annotations != null then ingress.annotations else {},
+    labels+: query.deployment.metadata.labels + params.queryRbacProxy.ingress.labels,
+  },
+  spec+: {
+    rules+: [
+      {
+        host: ingress.host,
+        http: {
+          paths: [
+            {
+              path: '/',
+              pathType: 'Prefix',
+              backend: {
+                service: {
+                  name: proxyService.metadata.name,
+                  port: {
+                    number: proxyServicePort,
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+    ],
+    tls+: [
+      {
+        hosts: [ ingress.host ],
+        secretName: '%s-tls' % instance,
+      },
+    ],
+  },
 };
 
 local queryArtifacts = if params.query.enabled then {
@@ -114,5 +158,5 @@ local queryArtifacts = if params.query.enabled then {
 } else {};
 
 {
-  [if params.query.enabled && params.queryRbacProxy.enabled then '51_auth-proxy']: [ proxyService ],
+  [if params.query.enabled && params.queryRbacProxy.enabled then '50_auth-proxy']: [ proxyService, proxyIngress ],
 } + queryArtifacts

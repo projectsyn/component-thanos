@@ -25,4 +25,3 @@ local configureObjStore = std.objectHas(params.objectStorageConfig, 'type');
 + (import 'receive.libsonnet')
 + (import 'query.libsonnet')
 + (import 'store.libsonnet')
-+ (import 'ingress.libsonnet')
