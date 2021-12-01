@@ -112,6 +112,112 @@ default:: `ClusterIP`
 Service type for query service.
 Can be used to expose the Query endpoint externally via `LoadBalancer` type.
 
+== `ingress`
+
+[horizontal]
+type:: dict
+
+Configuration of an `Ingress` resource intended to expose the Thanos Query frontend.
+
+=== `enabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+Whether the Ingress should be deployed.
+
+=== `host`
+
+[horizontal]
+type:: string
+default:: ``
+required:: yes
+
+The hostname to expose.
+This parameter is required and component compilation fails if it's not provided when `enabled` is `true`.
+
+=== `serviceName`
+
+[horizontal]
+type:: string
+default:: `${_instance}-auth`
+
+The backing service name for the Ingress.
+
+=== `servicePort`
+
+[horizontal]
+type:: int
+default:: `${thanos:queryRbacProxy:port}`
+
+The backing service port for the Ingress.
+
+=== `annotations`
+
+[horizontal]
+type:: dict
+default:: `{cert-manager.io/cluster-issuer: letsencrypt-production}`
+
+The annotations of the Ingress resource.
+
+=== `secretName`
+
+[horizontal]
+type:: dict
+default:: `${_instance}-tls`
+
+The secret name for TLS certificate.
+With default annotations this certificate gets provisioned by Let's Encrypt via cert-manager.
+
+
+== `queryRbacProxy`
+
+[horizontal]
+type:: dict
+
+Configuration for the RBAC proxy sidecar that authenticates requests to Thanos Query when exposed.
+Users are authenticated with OAuth and authorized using Kubernetes RBAC.
+It's recommended to deploy the proxy together with an Ingress.
+
+[NOTE]
+Only OpenShift is currently supported.
+
+The proxy redirects browser requests without authentication headers to OpenShift OAuth.
+Once authenticated, the proxy does authorization by issueing a `SubjectAccessReview` on behalf of the requesting user against the service named `queryRbacProxy.serviceName`.
+
+=== `enabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+Whether the RBAC should be deployed.
+
+=== `redirectUri`
+
+[horizontal]
+type:: string
+default:: `https://${thanos:ingress:host}`
+
+The URL which OpenShift OAuth redirects back to after successfully authenticating a user.
+
+=== `serviceName`
+
+[horizontal]
+type:: string
+default:: `${_instance}-auth`
+
+The resource name of the additional `Service` object that gets created for exposing the querier via RBAC proxy.
+
+=== `port`
+
+[horizontal]
+type:: int
+default:: `8080`
+
+The port number of the `Service` and proxy sidecar container.
+
 == `objectStorageConfig`
 
 [horizontal]
