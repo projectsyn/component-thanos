@@ -64,6 +64,8 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
         spec+: {
           containers+: if params.queryRbacProxy.enabled then [
             {
+              assert std.startsWith(inv.parameters.facts.distribution, 'openshift') : 'RBAC proxy is only supported on OpenShift distributions',
+
               name: 'openshift-oauth-proxy',
               image: '%s/%s:%s' % [ proxyImage.registry, proxyImage.image, proxyImage.tag ],
               args: [

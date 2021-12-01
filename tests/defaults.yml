@@ -19,3 +19,5 @@ parameters:
       host: thanos.example.com
     queryRbacProxy:
       enabled: true
+  facts:
+    distribution: openshift
