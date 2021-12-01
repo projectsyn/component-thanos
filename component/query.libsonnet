@@ -61,6 +61,7 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
   deployment+: {
     spec+: {
       template+: {
+        local pod = self,
         spec+: {
           containers+: if params.queryRbacProxy.enabled then [
             {
@@ -72,7 +73,7 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
                 '--upstream=http://0.0.0.0:9090',
                 '--provider=openshift',
                 '--cookie-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token',
-                '--openshift-service-account=%s' % 'thanos-query',
+                '--openshift-service-account=%s' % pod.spec.serviceAccountName,
                 // TODO: Replace JSON below with `std.manifestJsonMinified({...}})` once available in newer jsonnet version
                 // Only cluster-admins should be able to get system resources
                 '--openshift-sar={"namespace":"%s","resource":"services","name":"%s","verb":"get"}' % [ params.namespace, params.queryRbacProxy.serviceName ],
