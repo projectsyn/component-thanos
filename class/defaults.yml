@@ -40,7 +40,6 @@ parameters:
         - rule_replica
     queryRbacProxy:
       enabled: false
-      redirectUri: https://${thanos:queryRbacProxy:ingress:host}
       ingress:
         enabled: true
         host: ""

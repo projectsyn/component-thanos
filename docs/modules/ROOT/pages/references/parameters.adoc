@@ -125,7 +125,7 @@ It's recommended to deploy the proxy together with an Ingress.
 Only OpenShift is currently supported.
 
 The proxy redirects browser requests without authentication headers to OpenShift OAuth.
-Once authenticated, the proxy does authorization by issueing a `SubjectAccessReview` on behalf of the requesting user against the service named `queryRbacProxy.serviceName`.
+Once authenticated, the proxy does authorization by issuing a `SubjectAccessReview` on behalf of the requesting user against the service named `queryRbacProxy.serviceName`.
 
 === `enabled`
 
@@ -133,15 +133,7 @@ Once authenticated, the proxy does authorization by issueing a `SubjectAccessRev
 type:: bool
 default:: `false`
 
-Whether the RBAC should be deployed.
-
-=== `redirectUri`
-
-[horizontal]
-type:: string
-default:: `\https://${thanos:ingress:host}`
-
-The URL which OpenShift OAuth redirects back to after successfully authenticating a user.
+Whether the RBAC proxy should be deployed.
 
 === `ingress`
 

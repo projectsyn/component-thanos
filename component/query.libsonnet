@@ -51,7 +51,7 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
   serviceAccount+: {
     metadata+: {
       annotations+: if params.queryRbacProxy.enabled then {
-        'serviceaccounts.openshift.io/oauth-redirecturi.primary': params.queryRbacProxy.redirectUri,
+        'serviceaccounts.openshift.io/oauth-redirecturi.primary': 'https://' + params.queryRbacProxy.ingress.host,
         // there is also another annotation:
         //  serviceaccounts.openshift.io/oauth-redirectreference.primary: '{"kind":"OAuthRedirectReference","apiVersion":"v1","reference":{"kind":"Route","name":"<route-name>"}}'
         // However, using an Ingress object generates a randomized Route name, and setting `kind: Ingress` didn't work.
