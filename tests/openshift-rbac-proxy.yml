@@ -9,3 +9,10 @@ parameters:
         endpoint: s3.example.com
         access_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/access_key}
         secret_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/secret_key}
+    queryRbacProxy:
+      enabled: true
+      ingress:
+        annotations: null
+        host: thanos.example.com
+  facts:
+    distribution: openshift

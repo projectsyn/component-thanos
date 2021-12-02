@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/component: query-layer
+    app.kubernetes.io/instance: thanos-query
+    app.kubernetes.io/name: thanos-query
+    app.kubernetes.io/version: v0.18.0
+    name: thanos-auth
+  name: thanos-auth
+spec:
+  ports:
+    - name: proxy
+      port: 8080
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/component: query-layer
+    app.kubernetes.io/instance: thanos-query
+    app.kubernetes.io/name: thanos-query
+    app.kubernetes.io/version: v0.18.0
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations: {}
+  labels:
+    app.kubernetes.io/component: query-layer
+    app.kubernetes.io/instance: thanos-query
+    app.kubernetes.io/name: thanos-query
+    app.kubernetes.io/version: v0.18.0
+    name: thanos
+  name: thanos
+spec:
+  rules:
+    - host: thanos.example.com
+      http:
+        paths:
+          - backend:
+              service:
+                name: thanos-auth
+                port:
+                  number: 8080
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - thanos.example.com
+      secretName: thanos-tls

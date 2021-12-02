@@ -38,6 +38,14 @@ parameters:
       replicaLabels:
         - prometheus_replica
         - rule_replica
+    queryRbacProxy:
+      enabled: false
+      ingress:
+        enabled: true
+        host: ""
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-production
+        labels: {}
     bucket:
       enabled: false
       replicas: 1
@@ -62,3 +70,8 @@ parameters:
         registry: quay.io
         image: thanos/thanos
         tag: ${thanos:commonConfig:version}
+      oauthProxy:
+        registry: quay.io
+        # Source: https://quay.io/repository/openshift/origin-oauth-proxy (which is indeed from https://github.com/openshift/oauth-proxy)
+        image: openshift/origin-oauth-proxy
+        tag: '4.9'

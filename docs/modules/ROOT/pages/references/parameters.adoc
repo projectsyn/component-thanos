@@ -112,6 +112,62 @@ default:: `ClusterIP`
 Service type for query service.
 Can be used to expose the Query endpoint externally via `LoadBalancer` type.
 
+== `queryRbacProxy`
+
+[horizontal]
+type:: dict
+
+Configuration for the RBAC proxy sidecar that authenticates requests to Thanos Query when exposed.
+Users are authenticated with OAuth and authorized using Kubernetes RBAC.
+It's recommended to deploy the proxy together with an Ingress.
+
+[NOTE]
+Only OpenShift is currently supported.
+
+The proxy redirects browser requests without authentication headers to OpenShift OAuth.
+Once authenticated, the proxy does authorization by issuing a `SubjectAccessReview` on behalf of the requesting user against the service named `queryRbacProxy.serviceName`.
+
+=== `enabled`
+
+[horizontal]
+type:: bool
+default:: `false`
+
+Whether the RBAC proxy should be deployed.
+
+=== `ingress`
+
+[horizontal]
+type:: dict
+
+Configuration of an `Ingress` resource to expose the Thanos Query frontend via RBAC proxy.
+
+==== `ingress.enabled`
+
+[horizontal]
+type:: bool
+default:: `true`
+
+Whether the Ingress should be deployed.
+
+==== `ingress.host`
+
+[horizontal]
+type:: string
+required:: yes
+
+The hostname to expose.
+This parameter is required and component compilation fails unless `enabled` is `false`.
+
+==== `ingress.annotations`
+
+[horizontal]
+type:: dict
+default:: `{cert-manager.io/cluster-issuer: letsencrypt-production}`
+
+The annotations of the Ingress resource.
+With default annotations the TLS certificate gets provisioned by Let's Encrypt via cert-manager.
+
 == `objectStorageConfig`
 
 [horizontal]

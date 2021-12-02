@@ -75,6 +75,19 @@ spec:
             periodSeconds: 5
           resources: {}
           terminationMessagePolicy: FallbackToLogsOnError
+        - args:
+            - --upstream=http://0.0.0.0:9090
+            - --provider=openshift
+            - --cookie-secret-file=/var/run/secrets/kubernetes.io/serviceaccount/token
+            - --openshift-service-account=thanos-query
+            - --openshift-sar={"namespace":"syn-thanos","resource":"services","name":"thanos-auth","verb":"get"}
+            - --http-address=http://:8080
+            - --https-address=
+          image: quay.io/openshift/origin-oauth-proxy:4.9
+          name: openshift-oauth-proxy
+          ports:
+            - containerPort: 8080
+              name: proxy
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
