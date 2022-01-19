@@ -43,7 +43,7 @@ jobs:
         with:
           path: ${{ env.COMPONENT_NAME }}
       - name: Compile component
-        run: make test -e instance=${{ matrix.instance }}
+        run: make test -e instance=${{ matrix.provider }}
   golden:
     runs-on: ubuntu-latest
     strategy:
@@ -51,6 +51,7 @@ jobs:
         instance:
           - defaults
           - store
+          - openshift-rbac-proxy
     defaults:
       run:
         working-directory: ${{ env.COMPONENT_NAME }}
@@ -59,4 +60,4 @@ jobs:
         with:
           path: ${{ env.COMPONENT_NAME }}
       - name: Golden diff
-        run: make golden-diff -e instance=${{ matrix.instance }}
+        run: make golden-diff -e instance=${{ matrix.provider }}
