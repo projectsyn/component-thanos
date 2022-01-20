@@ -216,7 +216,7 @@ It will require an `objectStorageConfig` if enabled.
 [horizontal]
 type:: dict
 
-Configuration for the Thanos https://thanos.io/v0.18/components/tools.md/#bucket-web[Bucket Web] component.
+Configuration for the Thanos https://thanos.io/v0.24/components/tools.md/#bucket-web[Bucket Web] component.
 See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet] for available options.
 
 === `enabled`
