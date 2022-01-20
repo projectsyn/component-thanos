@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/component: query-layer
     app.kubernetes.io/instance: thanos-query
     app.kubernetes.io/name: thanos-query
-    app.kubernetes.io/version: v0.18.0
+    app.kubernetes.io/version: v0.24.0
     name: thanos-auth
   name: thanos-auth
 spec:
@@ -18,7 +18,7 @@ spec:
     app.kubernetes.io/component: query-layer
     app.kubernetes.io/instance: thanos-query
     app.kubernetes.io/name: thanos-query
-    app.kubernetes.io/version: v0.18.0
+    app.kubernetes.io/version: v0.24.0
   type: ClusterIP
 ---
 apiVersion: networking.k8s.io/v1
@@ -29,7 +29,7 @@ metadata:
     app.kubernetes.io/component: query-layer
     app.kubernetes.io/instance: thanos-query
     app.kubernetes.io/name: thanos-query
-    app.kubernetes.io/version: v0.18.0
+    app.kubernetes.io/version: v0.24.0
     name: thanos
   name: thanos
 spec:
