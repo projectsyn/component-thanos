@@ -3,5 +3,6 @@ kind: Namespace
 metadata:
   annotations: {}
   labels:
+    SYNMonitoring: main
     name: syn-thanos
   name: syn-thanos

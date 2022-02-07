@@ -4,4 +4,5 @@ metadata:
   annotations: {}
   labels:
     name: syn-thanos
+    openshift.io/cluster-monitoring: 'true'
   name: syn-thanos
