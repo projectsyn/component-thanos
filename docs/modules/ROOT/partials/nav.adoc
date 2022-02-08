@@ -3,5 +3,8 @@
 .How-to
 * xref:how-tos/multi-instance.adoc[Deploy Multiple Instances]
 
+.Alert runbooks
+* xref:runbooks/ThanosNoStoreBlocksLoaded.adoc
+
 .Technical reference
 * xref:references/parameters.adoc[Parameters]

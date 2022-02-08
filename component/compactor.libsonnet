@@ -10,6 +10,7 @@ local params = inv.parameters.thanos;
 
 local compactor = thanos.compact(params.commonConfig + params.compactor) {
   alerts: alerts.PrometheusRuleFromMixin('thanos-compactor-alerts', [ 'thanos-compact.rules', 'thanos-compact' ], params.compactor_alerts),
+  custom_alerts: alerts.PrometheusRuleForCustom('thanos-compactor-custom-alerts', 'thanos-compactor-custom.rules', params.compactor_alerts.custom),
 };
 
 if params.compactor.enabled then {
