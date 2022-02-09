@@ -33,7 +33,8 @@ jobs:
       matrix:
         instance:
           - defaults
-          - store
+          - all-in-one-1-18
+          - all-in-one
           - openshift-rbac-proxy
     defaults:
       run:
@@ -50,7 +51,8 @@ jobs:
       matrix:
         instance:
           - defaults
-          - store
+          - all-in-one-1-18
+          - all-in-one
           - openshift-rbac-proxy
     defaults:
       run:

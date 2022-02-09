@@ -1,3 +1,4 @@
+local alerts = import 'alerts.libsonnet';
 local thanosMixin = import 'github.com/thanos-io/thanos/mixin/mixin.libsonnet';
 local thanos = import 'kube-thanos/thanos.libsonnet';
 local com = import 'lib/commodore.libjsonnet';
@@ -8,18 +9,8 @@ local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
 local store = thanos.store(params.commonConfig + params.store) {
-  alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-store-alerts') {
-    metadata+: {
-      namespace: params.namespace,
-    },
-    spec+: {
-      groups+:
-        std.filter(
-          function(group) group.name == 'thanos-store',
-          thanosMixin.prometheusAlerts.groups
-        ),
-    },
-  },
+  alerts: alerts.PrometheusRuleFromMixin('thanos-store-alerts', [ 'thanos-store', 'thanos-store.rules' ], params.store_alerts),
+
   service+: {
     spec+: {
       type: params.store.serviceType,

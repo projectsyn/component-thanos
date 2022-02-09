@@ -8,7 +8,7 @@ local thanos_mixin_version_map = {
   '1.19': '79d8cfdc1a00f8a96475d5d1ff1a852b184b146e',
   '1.20': '09b36547e5ed61a32a309648a8913bd02c08d3cc',
   '1.21': 'ff363498fc95cfe17de894d7237bcf38bdd0bc36',
-  '1.22': 'ff363498fc95cfe17de894d7237bcf38bdd0bc36',  // from: https://github.com/prometheus-operator/kube-prometheus/blob/release-0.9/jsonnetfile.lock.json#L144
+  '1.22': '632032712f12eea0015aaef24ee1e14f38ef3e55',  // from: https://github.com/prometheus-operator/kube-prometheus/blob/5b9aa36169af47a1fb938cc7984d4ee59588fe2a/jsonnetfile.lock.json#L144
 };
 
 // To get the kube-thanos versions which are compatible with OCP4.x:

@@ -1,9 +1,13 @@
 parameters:
   thanos:
     createNamespace: false
+    jsonnetfile_parameters:
+      kubernetes_version: '1.22'
     commonConfig:
       objectStorageConfig:
         name: thanos-objectstorage-1
+    query:
+      enabled: true
     objectStorageConfig:
       type: S3
       config:
@@ -14,8 +18,18 @@ parameters:
     store:
       enabled: true
       name: thanos-store-1
-    query:
-      enabled: false
+    receive:
+      enabled: true
+    compactor:
+      enabled: true
+    compactor_alerts:
+      patches:
+        "*":
+          annotations:
+            syn.example.com/q: "qqq"
+        ThanosCompactMultipleRunning:
+          annotations:
+            syn.example.com/test: "test"
     bucket:
       enabled: true
       name: thanos-bucket-1

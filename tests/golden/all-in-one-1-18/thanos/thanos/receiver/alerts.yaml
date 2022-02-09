@@ -1,0 +1,111 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations: {}
+  labels:
+    name: thanos-receiver-alerts
+  name: thanos-receiver-alerts
+  namespace: syn-thanos
+spec:
+  groups:
+    - name: thanos-receive.rules
+      rules:
+        - alert: ThanosReceiveHttpRequestErrorRateHigh
+          annotations:
+            description: Thanos Receive {{$labels.job}} is failing to handle {{ $value
+              | humanize }}% of requests.
+            summary: Thanos Receive is failing to handle requests.
+          expr: "(\n  sum(rate(http_requests_total{code=~\"5..\", job=~\"thanos-receive.*\"\
+            , handler=\"receive\"}[5m]))\n/\n  sum(rate(http_requests_total{job=~\"\
+            thanos-receive.*\", handler=\"receive\"}[5m]))\n) * 100 > 5\n"
+          for: 5m
+          labels:
+            severity: critical
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosReceiveHttpRequestLatencyHigh
+          annotations:
+            description: Thanos Receive {{$labels.job}} has a 99th percentile latency
+              of {{ $value }} seconds for requests.
+            summary: Thanos Receive has high HTTP requests latency.
+          expr: "(\n  histogram_quantile(0.99, sum by (job, le) (rate(http_request_duration_seconds_bucket{job=~\"\
+            thanos-receive.*\", handler=\"receive\"}[5m]))) > 10\nand\n  sum by (job)\
+            \ (rate(http_request_duration_seconds_count{job=~\"thanos-receive.*\"\
+            , handler=\"receive\"}[5m])) > 0\n)\n"
+          for: 10m
+          labels:
+            severity: critical
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosReceiveHighReplicationFailures
+          annotations:
+            description: Thanos Receive {{$labels.job}} is failing to replicate {{
+              $value | humanize }}% of requests.
+            summary: Thanos Receive is having high number of replication failures.
+          expr: "thanos_receive_replication_factor > 1\n  and\n(\n  (\n    sum by\
+            \ (job) (rate(thanos_receive_replications_total{result=\"error\", job=~\"\
+            thanos-receive.*\"}[5m]))\n  /\n    sum by (job) (rate(thanos_receive_replications_total{job=~\"\
+            thanos-receive.*\"}[5m]))\n  )\n  >\n  (\n    max by (job) (floor((thanos_receive_replication_factor{job=~\"\
+            thanos-receive.*\"}+1) / 2))\n  /\n    max by (job) (thanos_receive_hashring_nodes{job=~\"\
+            thanos-receive.*\"})\n  )\n) * 100\n"
+          for: 5m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosReceiveHighForwardRequestFailures
+          annotations:
+            description: Thanos Receive {{$labels.job}} is failing to forward {{ $value
+              | humanize }}% of requests.
+            summary: Thanos Receive is failing to forward requests.
+          expr: "(\n  sum by (job) (rate(thanos_receive_forward_requests_total{result=\"\
+            error\", job=~\"thanos-receive.*\"}[5m]))\n/\n  sum by (job) (rate(thanos_receive_forward_requests_total{job=~\"\
+            thanos-receive.*\"}[5m]))\n) * 100 > 20\n"
+          for: 5m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosReceiveHighHashringFileRefreshFailures
+          annotations:
+            description: Thanos Receive {{$labels.job}} is failing to refresh hashring
+              file, {{ $value | humanize }} of attempts failed.
+            summary: Thanos Receive is failing to refresh hasring file.
+          expr: "(\n  sum by (job) (rate(thanos_receive_hashrings_file_errors_total{job=~\"\
+            thanos-receive.*\"}[5m]))\n/\n  sum by (job) (rate(thanos_receive_hashrings_file_refreshes_total{job=~\"\
+            thanos-receive.*\"}[5m]))\n> 0\n)\n"
+          for: 15m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosReceiveConfigReloadFailure
+          annotations:
+            description: Thanos Receive {{$labels.job}} has not been able to reload
+              hashring configurations.
+            summary: Thanos Receive has not been able to reload configuration.
+          expr: avg(thanos_receive_config_last_reload_successful{job=~"thanos-receive.*"})
+            by (job) != 1
+          for: 5m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosReceiveNoUpload
+          annotations:
+            description: Thanos Receive {{ $labels.instance }} of {{$labels.job}}
+              has not uploaded latest data to object storage.
+            summary: Thanos Receive has not uploaded latest data to object storage.
+          expr: '(up{job=~"thanos-receive.*"} - 1)
+
+            + on (instance) # filters to only alert on current instance last 3h
+
+            (sum by (instance) (increase(thanos_shipper_uploads_total{job=~"thanos-receive.*"}[3h]))
+            == 0)
+
+            '
+          for: 3h
+          labels:
+            severity: critical
+            syn: 'true'
+            syn_component: thanos
