@@ -9,7 +9,8 @@
     key: instance
     entries:
       - defaults
-      - store
+      - all-in-one-1-18
+      - all-in-one
       - openshift-rbac-proxy
   makeTarget: test -e instance=${{ matrix.instance }}
   goldenTest_makeTarget: golden-diff -e instance=${{ matrix.instance }}

@@ -2,6 +2,10 @@ parameters:
   thanos:
     query:
       replicas: 3
+    query_alerts:
+      enabled:
+        "*": true
+      patches: null
     objectStorageConfig:
       type: S3
       config:

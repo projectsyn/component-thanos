@@ -1,0 +1,46 @@
+parameters:
+  thanos:
+    createNamespace: false
+    jsonnetfile_parameters:
+      kubernetes_version: '1.18'
+    commonConfig:
+      objectStorageConfig:
+        name: thanos-objectstorage-1
+    query:
+      enabled: true
+    query_alerts:
+      enabled:
+        "*": true
+    objectStorageConfig:
+      type: S3
+      config:
+        bucket: bucket-1
+        endpoint: s3.example.com
+        access_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/access_key_1}
+        secret_key: ?{vaultkv:${cluster:tenant}/${cluster:name}/thanos/secret_key_1}
+    store:
+      enabled: true
+      name: thanos-store-1
+    store_alerts:
+      enabled:
+        "*": true
+    receive:
+      enabled: true
+    receive_alerts:
+      enabled:
+        "*": true
+    compactor:
+      enabled: true
+    compactor_alerts:
+      enabled:
+        "*": true
+      patches:
+        "*":
+          annotations:
+            syn.example.com/q: "qqq"
+        ThanosCompactMultipleRunning:
+          annotations:
+            syn.example.com/test: "test"
+    bucket:
+      enabled: true
+      name: thanos-bucket-1

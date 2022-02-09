@@ -112,6 +112,37 @@ default:: `ClusterIP`
 Service type for query service.
 Can be used to expose the Query endpoint externally via `LoadBalancer` type.
 
+== `query_alerts.enabled`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+"*": true
+----
+
+Configuration for the Thanos https://thanos.io/tip/components/query.md[Query] alerts.
+Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-query[here].
+From Kubernetes version `v1.22` (OCP `v4.9`) alerts include upstream runbooks.
+
+`"*": true` allows enabling all alerts.
+`AlertName: true` enables a single alert.
+
+== `query_alerts.patches`
+
+[horizontal]
+type:: dict
+default:: `{}`
+
+This parameter allows patching upstream https://thanos.io/tip/components/query.md[Query] in the hierarchy.
+Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-query[here].
+
+`"*": {}` allows patching all alerts.
+`AlertName: {}` patches a single alert.
+
+
 == `queryRbacProxy`
 
 [horizontal]
@@ -194,6 +225,37 @@ default:: `false`
 If the Store component should be deployed.
 It will require an `objectStorageConfig` if enabled.
 
+== `store_alerts.enabled`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+"*": true
+----
+
+Configuration for the Thanos https://thanos.io/tip/components/store.md[Store] alerts.
+Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-store[here].
+From Kubernetes version `v1.22` (OCP `v4.9`) alerts include upstream runbooks.
+
+`"*": true` allows enabling all alerts.
+`AlertName: true` enables a single alert.
+
+== `store_alerts.patches`
+
+[horizontal]
+type:: dict
+default:: `{}`
+
+This parameter allows patching upstream https://thanos.io/tip/components/store.md[Store] in the hierarchy.
+Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-store[here].
+
+`"*": {}` allows patching all alerts.
+`AlertName: {}` patches a single alert.
+
+
 == `compactor`
 
 [horizontal]
@@ -210,6 +272,37 @@ default:: `false`
 
 If the Compactor component should be deployed.
 It will require an `objectStorageConfig` if enabled.
+
+== `compactor_alerts.enabled`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+"*": true
+----
+
+Configuration for the Thanos https://thanos.io/tip/components/compact.md[Compactor] alerts.
+Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-compact[here].
+From Kubernetes version `v1.22` (OCP `v4.9`) alerts include upstream runbooks.
+
+`"*": true` allows enabling all alerts.
+`AlertName: true` enables a single alert.
+
+== `compactor_alerts.patches`
+
+[horizontal]
+type:: dict
+default:: `{}`
+
+This parameter allows patching upstream https://thanos.io/tip/components/compact.md[Compactor] in the hierarchy.
+Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-compact[here].
+
+`"*": {}` allows patching all alerts.
+`AlertName: {}` patches a single alert.
+
 
 == `bucket`
 
@@ -240,6 +333,37 @@ See https://github.com/thanos-io/kube-thanos/blob/master/all.jsonnet[all.jsonnet
 
 If the Receiver component should be deployed.
 It will require an `objectStorageConfig` if enabled.
+
+== `receive_alerts.enabled`
+
+[horizontal]
+type:: dict
+default::
++
+[source,yaml]
+----
+"*": true
+----
+
+Configuration for the Thanos https://thanos.io/tip/components/receive.md/[Receiver] alerts.
+Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-receive[here].
+From Kubernetes version `v1.22` (OCP `v4.9`) alerts include upstream runbooks.
+
+`"*": true` allows enabling all alerts.
+`AlertName: true` enables a single alert.
+
+== `receive_alerts.patches`
+
+[horizontal]
+type:: dict
+default:: `{}`
+
+This parameter allows patching upstream https://thanos.io/tip/components/receive.md/[Receiver] in the hierarchy.
+Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-receive[here].
+
+`"*": {}` allows patching all alerts.
+`AlertName: {}` patches a single alert.
+
 
 == `images`
 

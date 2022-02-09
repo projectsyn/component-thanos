@@ -1,3 +1,4 @@
+local alerts = import 'alerts.libsonnet';
 local thanosMixin = import 'github.com/thanos-io/thanos/mixin/mixin.libsonnet';
 local thanos = import 'kube-thanos/thanos.libsonnet';
 local com = import 'lib/commodore.libjsonnet';
@@ -8,18 +9,7 @@ local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
 local receiver = thanos.receive(params.commonConfig + params.receive) {
-  alerts+: kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', 'thanos-receiver-alerts') {
-    metadata+: {
-      namespace: params.namespace,
-    },
-    spec+: {
-      groups+:
-        std.filter(
-          function(group) group.name == 'thanos-receive',
-          thanosMixin.prometheusAlerts.groups
-        ),
-    },
-  },
+  alerts: alerts.PrometheusRuleFromMixin('thanos-receiver-alerts', [ 'thanos-receive', 'thanos-receive.rules' ], params.receive_alerts),
 };
 
 if params.receive.enabled then {

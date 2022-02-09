@@ -7,4 +7,99 @@ metadata:
   name: thanos-query-alerts
   namespace: syn-thanos
 spec:
-  groups: []
+  groups:
+    - name: thanos-query.rules
+      rules:
+        - alert: ThanosQueryHttpRequestQueryErrorRateHigh
+          annotations:
+            description: Thanos Query {{$labels.job}} is failing to handle {{ $value
+              | humanize }}% of "query" requests.
+            summary: Thanos Query is failing to handle requests.
+          expr: "(\n  sum(rate(http_requests_total{code=~\"5..\", job=~\"thanos-query.*\"\
+            , handler=\"query\"}[5m]))\n/\n  sum(rate(http_requests_total{job=~\"\
+            thanos-query.*\", handler=\"query\"}[5m]))\n) * 100 > 5\n"
+          for: 5m
+          labels:
+            severity: critical
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosQueryHttpRequestQueryRangeErrorRateHigh
+          annotations:
+            description: Thanos Query {{$labels.job}} is failing to handle {{ $value
+              | humanize }}% of "query_range" requests.
+            summary: Thanos Query is failing to handle requests.
+          expr: "(\n  sum(rate(http_requests_total{code=~\"5..\", job=~\"thanos-query.*\"\
+            , handler=\"query_range\"}[5m]))\n/\n  sum(rate(http_requests_total{job=~\"\
+            thanos-query.*\", handler=\"query_range\"}[5m]))\n) * 100 > 5\n"
+          for: 5m
+          labels:
+            severity: critical
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosQueryGrpcServerErrorRate
+          annotations:
+            description: Thanos Query {{$labels.job}} is failing to handle {{ $value
+              | humanize }}% of requests.
+            summary: Thanos Query is failing to handle requests.
+          expr: "(\n  sum by (job) (rate(grpc_server_handled_total{grpc_code=~\"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss|DeadlineExceeded\"\
+            , job=~\"thanos-query.*\"}[5m]))\n/\n  sum by (job) (rate(grpc_server_started_total{job=~\"\
+            thanos-query.*\"}[5m]))\n* 100 > 5\n)\n"
+          for: 5m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosQueryGrpcClientErrorRate
+          annotations:
+            description: Thanos Query {{$labels.job}} is failing to send {{ $value
+              | humanize }}% of requests.
+            summary: Thanos Query is failing to send requests.
+          expr: "(\n  sum by (job) (rate(grpc_client_handled_total{grpc_code!=\"OK\"\
+            , job=~\"thanos-query.*\"}[5m]))\n/\n  sum by (job) (rate(grpc_client_started_total{job=~\"\
+            thanos-query.*\"}[5m]))\n) * 100 > 5\n"
+          for: 5m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosQueryHighDNSFailures
+          annotations:
+            description: Thanos Query {{$labels.job}} have {{ $value | humanize }}%
+              of failing DNS queries for store endpoints.
+            summary: Thanos Query is having high number of DNS failures.
+          expr: "(\n  sum by (job) (rate(thanos_query_store_apis_dns_failures_total{job=~\"\
+            thanos-query.*\"}[5m]))\n/\n  sum by (job) (rate(thanos_query_store_apis_dns_lookups_total{job=~\"\
+            thanos-query.*\"}[5m]))\n) * 100 > 1\n"
+          for: 15m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosQueryInstantLatencyHigh
+          annotations:
+            description: Thanos Query {{$labels.job}} has a 99th percentile latency
+              of {{ $value }} seconds for instant queries.
+            summary: Thanos Query has high latency for queries.
+          expr: "(\n  histogram_quantile(0.99, sum by (job, le) (rate(http_request_duration_seconds_bucket{job=~\"\
+            thanos-query.*\", handler=\"query\"}[5m]))) > 40\nand\n  sum by (job)\
+            \ (rate(http_request_duration_seconds_bucket{job=~\"thanos-query.*\",\
+            \ handler=\"query\"}[5m])) > 0\n)\n"
+          for: 10m
+          labels:
+            severity: critical
+            syn: 'true'
+            syn_component: thanos
+        - alert: ThanosQueryRangeLatencyHigh
+          annotations:
+            description: Thanos Query {{$labels.job}} has a 99th percentile latency
+              of {{ $value }} seconds for range queries.
+            summary: Thanos Query has high latency for queries.
+          expr: "(\n  histogram_quantile(0.99, sum by (job, le) (rate(http_request_duration_seconds_bucket{job=~\"\
+            thanos-query.*\", handler=\"query_range\"}[5m]))) > 90\nand\n  sum by\
+            \ (job) (rate(http_request_duration_seconds_count{job=~\"thanos-query.*\"\
+            , handler=\"query_range\"}[5m])) > 0\n)\n"
+          for: 10m
+          labels:
+            severity: critical
+            syn: 'true'
+            syn_component: thanos
