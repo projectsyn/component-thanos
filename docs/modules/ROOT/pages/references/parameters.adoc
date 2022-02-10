@@ -142,6 +142,44 @@ Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-query
 `"*": {}` allows patching all alerts.
 `AlertName: {}` patches a single alert.
 
+== `query_alerts.custom`
+
+[horizontal]
+type:: dict
+example::
++
+[source,yaml]
+----
+ThanosDidSomething:
+  enabled: false
+  rule:
+    annotations:
+      description: Thanos did something.
+      message: Thanos did something.
+      runbook: https://hub.syn.tools/thanos/runbooks/ThanosDidSomething.html
+    expr: |
+      thanos_doing_something > 1
+    for: 10m
+    labels:
+      severity: warning
+----
+
+Allows setting custom rules.
+
+=== `.custom.*.enabled`
+
+[horizontal]
+type:: boolean
+
+Controls if the custom rule is enabled.
+
+=== `.custom.*.rule`
+
+[horizontal]
+type:: dict
+
+The rule defintion.
+
 
 == `queryRbacProxy`
 
@@ -255,6 +293,44 @@ Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-store
 `"*": {}` allows patching all alerts.
 `AlertName: {}` patches a single alert.
 
+== `store_alerts.custom`
+
+[horizontal]
+type:: dict
+example::
++
+[source,yaml]
+----
+ThanosDidSomething:
+  enabled: false
+  rule:
+    annotations:
+      description: Thanos did something.
+      message: Thanos did something.
+      runbook: https://hub.syn.tools/thanos/runbooks/ThanosDidSomething.html
+    expr: |
+      thanos_doing_something > 1
+    for: 10m
+    labels:
+      severity: warning
+----
+
+Allows setting custom rules.
+
+=== `.custom.*.enabled`
+
+[horizontal]
+type:: boolean
+
+Controls if the custom rule is enabled.
+
+=== `.custom.*.rule`
+
+[horizontal]
+type:: dict
+
+The rule defintion.
+
 
 == `compactor`
 
@@ -302,6 +378,44 @@ Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-compa
 
 `"*": {}` allows patching all alerts.
 `AlertName: {}` patches a single alert.
+
+== `compactor_alerts.custom`
+
+[horizontal]
+type:: dict
+example::
++
+[source,yaml]
+----
+ThanosDidSomething:
+  enabled: false
+  rule:
+    annotations:
+      description: Thanos did something.
+      message: Thanos did something.
+      runbook: https://hub.syn.tools/thanos/runbooks/ThanosDidSomething.html
+    expr: |
+      thanos_doing_something > 1
+    for: 10m
+    labels:
+      severity: warning
+----
+
+Allows setting custom rules.
+
+=== `.custom.*.enabled`
+
+[horizontal]
+type:: boolean
+
+Controls if the custom rule is enabled.
+
+=== `.custom.*.rule`
+
+[horizontal]
+type:: dict
+
+The rule defintion.
 
 
 == `bucket`
@@ -363,6 +477,44 @@ Available alerts can be found https://monitoring.mixins.dev/thanos/#thanos-recei
 
 `"*": {}` allows patching all alerts.
 `AlertName: {}` patches a single alert.
+
+== `receive_alerts.custom`
+
+[horizontal]
+type:: dict
+example::
++
+[source,yaml]
+----
+ThanosDidSomething:
+  enabled: false
+  rule:
+    annotations:
+      description: Thanos did something.
+      message: Thanos did something.
+      runbook: https://hub.syn.tools/thanos/runbooks/ThanosDidSomething.html
+    expr: |
+      thanos_doing_something > 1
+    for: 10m
+    labels:
+      severity: warning
+----
+
+Allows setting custom rules.
+
+=== `.custom.*.enabled`
+
+[horizontal]
+type:: boolean
+
+Controls if the custom rule is enabled.
+
+=== `.custom.*.rule`
+
+[horizontal]
+type:: dict
+
+The rule defintion.
 
 
 == `images`

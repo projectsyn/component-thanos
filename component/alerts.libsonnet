@@ -23,6 +23,26 @@ local ruleEnabled = function(alertConfig, rule)
   (std.objectHas(alertConfig.enabled, '*') && alertConfig.enabled['*'] == true)
   || (std.objectHas(alertConfig.enabled, rule.alert) && alertConfig.enabled[rule.alert] == true);
 
+local customAlerts = function(name, groupName, customAlerts)
+  com.namespaced(params.namespace, kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', name) {
+    spec+: {
+      groups+: [
+        {
+          name: groupName,
+          rules:
+            std.sort(std.filterMap(
+              function(field) customAlerts[field].enabled == true,
+              function(field) customAlerts[field].rule {
+                alert: field,
+                labels+: alertlabels,
+              },
+              std.objectFields(customAlerts)
+            )),
+        },
+      ],
+    },
+  });
+
 local fromMixin =
   function(name, mixinGroupNames, alertConfig) kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', name) {
     metadata+: {
@@ -49,4 +69,5 @@ local fromMixin =
 
 {
   PrometheusRuleFromMixin: fromMixin,
+  PrometheusRuleForCustom: customAlerts,
 }

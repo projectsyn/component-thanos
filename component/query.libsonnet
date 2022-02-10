@@ -33,6 +33,7 @@ local query = thanos.query(queryBaseConfig + params.commonConfig + params.query 
   stores+: extraStores,
 }) {
   alerts: alerts.PrometheusRuleFromMixin('thanos-query-alerts', [ 'thanos-query', 'thanos-query.rules' ], params.query_alerts),
+  custom_alerts: alerts.PrometheusRuleForCustom('thanos-query-custom-alerts', 'thanos-query-custom.rules', params.query_alerts.custom),
 
   service+: {
     spec+: {

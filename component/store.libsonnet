@@ -10,6 +10,7 @@ local params = inv.parameters.thanos;
 
 local store = thanos.store(params.commonConfig + params.store) {
   alerts: alerts.PrometheusRuleFromMixin('thanos-store-alerts', [ 'thanos-store', 'thanos-store.rules' ], params.store_alerts),
+  custom_alerts: alerts.PrometheusRuleForCustom('thanos-store-custom-alerts', 'thanos-store-custom.rules', params.store_alerts.custom),
 
   service+: {
     spec+: {

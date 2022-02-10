@@ -24,6 +24,9 @@ parameters:
     store_alerts:
       enabled:
         "*": true
+      custom:
+        ThanosNoStoreBlocksLoaded:
+          enabled: true
     receive:
       enabled: true
     receive_alerts:

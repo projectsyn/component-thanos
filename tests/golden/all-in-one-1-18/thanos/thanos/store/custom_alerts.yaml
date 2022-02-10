@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations: {}
+  labels:
+    name: thanos-store-custom-alerts
+  name: thanos-store-custom-alerts
+  namespace: syn-thanos
+spec:
+  groups:
+    - name: thanos-store-custom.rules
+      rules:
+        - alert: ThanosNoStoreBlocksLoaded
+          annotations:
+            description: Thanos Store {{$labels.namespace}}/{{$labels.job}} has not
+              loaded any blocks in the last 3 hours.
+            message: Thanos Store {{$labels.namespace}}/{{$labels.job}} has not loaded
+              any blocks in the last 3 hours.
+            runbook_url: https://hub.syn.tools/thanos/runbooks/ThanosNoStoreBlocksLoaded.html
+            summary: Thanos Store has not loaded any blocks in the last 3 hours.
+          expr: 'absent(thanos_bucket_store_blocks_last_loaded_timestamp_seconds)
+            != 1 and (time() - thanos_bucket_store_blocks_last_loaded_timestamp_seconds)
+            > 3 * 60 * 60
+
+            '
+          for: 10m
+          labels:
+            severity: warning
+            syn: 'true'
+            syn_component: thanos

@@ -18,6 +18,10 @@ parameters:
     store:
       enabled: true
       name: thanos-store-1
+    store_alerts:
+      custom:
+        ThanosNoStoreBlocksLoaded:
+          enabled: true
     receive:
       enabled: true
     compactor:

@@ -10,6 +10,7 @@ local params = inv.parameters.thanos;
 
 local receiver = thanos.receive(params.commonConfig + params.receive) {
   alerts: alerts.PrometheusRuleFromMixin('thanos-receiver-alerts', [ 'thanos-receive', 'thanos-receive.rules' ], params.receive_alerts),
+  custom_alerts: alerts.PrometheusRuleForCustom('thanos-receive-custom-alerts', 'thanos-receive-custom.rules', params.receive_alerts.custom),
 };
 
 if params.receive.enabled then {

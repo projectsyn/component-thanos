@@ -1,0 +1,31 @@
+= Alert rule: ThanosNoStoreBlocksLoaded
+
+include::partial$runbooks/contribution_note.adoc[]
+
+== icon:glasses[] Overview
+
+During the last 3 hours, no Thanos Store block has been loaded.
+This can indicate possible data loss.
+
+== icon:bug[] Steps for debugging
+
+* Check logs, configuration for Thanos compact, store and receive components for possible cause(s).
+* Check Thanos compact Statefulset
+** Check the logs of Thanos compact pods for any errors.
+** Check for valid configuration as per <https://thanos.io/tip/components/compact.md/>
+*** Object Store configuration (--objstore.config)
+*** Downsampling configuration (--retention.resolution-*)
+*** Currently Thanos compact works as expected if the retention.resolution-raw, retention.resolution-5m and retention.resolution-1h are set for the same duration.
+** Also check guidelines for these downsampling Thanos compact command line args at: <https://thanos.io/tip/components/compact.md/>
+*** --retention.resolution-5m needs more than 40 hours
+*** --retention.resolution-1h needs to be more than 10 days
+* Check Thanos store statefulset
+** Check the logs of Thanos store pods for any errors related to blocks loading from Object store.
+** Check for valid Object store configuration (--objstore.config) as per <https://thanos.io/tip/components/store.md/>
+* Check Thanos receive Statefulset
+** Check the logs of Thanos receive pods for any errors related to blocks uploaded to Object store.
+** Check for valid Object store configuration (--objstore.config) as per <https://thanos.io/tip/components/receive.md/>
+
+== Adapted from
+
+https://github.com/rhobs/configuration/blob/70aa0baf3d5c7a5a1a3d2e5b2828b32220944b61/docs/sop/observatorium.md?plain=1#L1466
