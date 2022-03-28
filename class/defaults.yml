@@ -1,6 +1,7 @@
 parameters:
   thanos:
-    multi_instance: true
+    =_metadata:
+      multi_instance: true
     namespace: syn-thanos
     createNamespace: true
     cluster_kubernetes_version: "1.18"
