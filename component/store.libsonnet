@@ -20,6 +20,7 @@ local store = thanos.store(params.commonConfig + params.store) {
 };
 
 if params.store.enabled then {
-  ['store/' + name]: store[name]
+  [if !alerts.IgnoreManifest(store[name]) then 'store/' + name]:
+    store[name]
   for name in std.objectFields(store)
 } else {}
