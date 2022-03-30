@@ -14,6 +14,7 @@ local compactor = thanos.compact(params.commonConfig + params.compactor) {
 };
 
 if params.compactor.enabled then {
-  ['compactor/' + name]: compactor[name]
+  [if !alerts.IgnoreManifest(compactor[name]) then 'compactor/' + name]:
+    compactor[name]
   for name in std.objectFields(compactor)
 } else {}

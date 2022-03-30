@@ -67,7 +67,17 @@ local fromMixin =
     },
   };
 
+local ignoreManifest(obj) =
+  obj != null &&
+  obj.kind == 'PrometheusRule' &&
+  (
+    obj.spec.groups == null ||
+    obj.spec.groups[0].rules == null ||
+    std.length(obj.spec.groups[0].rules) == 0
+  );
+
 {
   PrometheusRuleFromMixin: fromMixin,
   PrometheusRuleForCustom: customAlerts,
+  IgnoreManifest: ignoreManifest,
 }

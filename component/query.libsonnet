@@ -145,7 +145,8 @@ local proxyIngress = if ingress.enabled then kube.Ingress(instance) {
 } else {};
 
 local queryArtifacts = if params.query.enabled then {
-  ['query/' + name]: query[name]
+  [if !alerts.IgnoreManifest(query[name]) then 'query/' + name]:
+    query[name]
   for name in std.objectFields(query)
 } else {};
 

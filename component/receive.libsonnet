@@ -14,6 +14,7 @@ local receiver = thanos.receive(params.commonConfig + params.receive) {
 };
 
 if params.receive.enabled then {
-  ['receiver/' + name]: receiver[name]
+  [if !alerts.IgnoreManifest(receiver[name]) then 'receiver/' + name]:
+    receiver[name]
   for name in std.objectFields(receiver)
 } else {}
