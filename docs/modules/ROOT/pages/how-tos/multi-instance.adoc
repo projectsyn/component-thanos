@@ -70,6 +70,9 @@ parameters:
     store:
       enabled: true
       name: thanos-store-1 <2>
+    store_alerts:
+      enabled:
+        "*": false <4>
     query:
       enabled: false
     bucket:
@@ -82,3 +85,5 @@ parameters:
 <1> The configuration of the common Thanos setup as required
 <2> The resource name that must be different in each instance to avoid name collisions between instances
 <3> This is required for all but one instance
+<4> Disable provisioning of `thanos-store` alerts for the instance.
+This should be set for all but one instance of `thanos-store` sharing the namespace.
