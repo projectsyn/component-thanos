@@ -1,5 +1,5 @@
 :global:
-  componentName: thanos
+  componentName: Thanos
   githubUrl: https://github.com/projectsyn/component-thanos
   feature_goUnitTests: false
   feature_goldenTests: true
@@ -14,10 +14,6 @@
 .github/workflows/test.yaml:
   makeTarget: test -e instance=${{ matrix.instance }}
   goldenTest_makeTarget: golden-diff -e instance=${{ matrix.instance }}
-
-docs/antora.yml:
-  name: thanos
-  title: Thanos
 
 .gitignore:
   additionalEntries:
