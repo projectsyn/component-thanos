@@ -1,0 +1,21 @@
+{
+  "template": "https://github.com/projectsyn/commodore-component-template.git",
+  "commit": "e6c4fd69190db1ad12e941d578b9423d0e2f993c",
+  "checkout": "main",
+  "context": {
+    "cookiecutter": {
+      "name": "Thanos",
+      "slug": "thanos",
+      "parameter_key": "thanos",
+      "test_cases": "defaults all-in-one-1-18 all-in-one openshift-rbac-proxy",
+      "add_golden": "y",
+      "add_matrix": "y",
+      "add_go_unit": "n",
+      "github_owner": "projectsyn",
+      "github_name": "component-thanos",
+      "github_url": "https://github.com/projectsyn/component-thanos",
+      "_template": "https://github.com/projectsyn/commodore-component-template.git"
+    }
+  },
+  "directory": null
+}
