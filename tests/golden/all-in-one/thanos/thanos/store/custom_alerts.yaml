@@ -18,11 +18,8 @@ spec:
               any blocks in the last 3 hours.
             runbook_url: https://hub.syn.tools/thanos/runbooks/ThanosNoStoreBlocksLoaded.html
             summary: Thanos Store has not loaded any blocks in the last 3 hours.
-          expr: 'absent(thanos_bucket_store_blocks_last_loaded_timestamp_seconds)
-            != 1 and (time() - thanos_bucket_store_blocks_last_loaded_timestamp_seconds)
-            > 3 * 60 * 60
-
-            '
+          expr: |
+            absent(thanos_bucket_store_blocks_last_loaded_timestamp_seconds) != 1 and (time() - thanos_bucket_store_blocks_last_loaded_timestamp_seconds) > 3 * 60 * 60
           for: 10m
           labels:
             severity: warning

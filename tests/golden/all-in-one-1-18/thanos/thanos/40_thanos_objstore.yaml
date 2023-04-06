@@ -8,7 +8,11 @@ metadata:
   name: thanos-objectstorage-1
   namespace: syn-thanos
 stringData:
-  thanos.yaml: "\"config\":\n  \"access_key\": \"t-silent-test-1234/c-green-test-1234/thanos/access_key_1\"\
-    \n  \"bucket\": \"bucket-1\"\n  \"endpoint\": \"s3.example.com\"\n  \"secret_key\"\
-    : \"t-silent-test-1234/c-green-test-1234/thanos/secret_key_1\"\n\"type\": \"S3\""
+  thanos.yaml: |-
+    "config":
+      "access_key": "t-silent-test-1234/c-green-test-1234/thanos/access_key_1"
+      "bucket": "bucket-1"
+      "endpoint": "s3.example.com"
+      "secret_key": "t-silent-test-1234/c-green-test-1234/thanos/secret_key_1"
+    "type": "S3"
 type: Opaque
