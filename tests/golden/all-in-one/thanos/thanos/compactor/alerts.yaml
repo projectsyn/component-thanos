@@ -44,9 +44,13 @@ spec:
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanoscompacthighcompactionfailures
             summary: Thanos Compact is failing to execute compactions.
             syn.example.com/q: qqq
-          expr: "(\n  sum by (job) (rate(thanos_compact_group_compactions_failures_total{job=~\"\
-            .*thanos-compact.*\"}[5m]))\n/\n  sum by (job) (rate(thanos_compact_group_compactions_total{job=~\"\
-            .*thanos-compact.*\"}[5m]))\n* 100 > 5\n)\n"
+          expr: |
+            (
+              sum by (job) (rate(thanos_compact_group_compactions_failures_total{job=~".*thanos-compact.*"}[5m]))
+            /
+              sum by (job) (rate(thanos_compact_group_compactions_total{job=~".*thanos-compact.*"}[5m]))
+            * 100 > 5
+            )
           for: 15m
           labels:
             severity: warning
@@ -59,9 +63,13 @@ spec:
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanoscompactbuckethighoperationfailures
             summary: Thanos Compact Bucket is having a high number of operation failures.
             syn.example.com/q: qqq
-          expr: "(\n  sum by (job) (rate(thanos_objstore_bucket_operation_failures_total{job=~\"\
-            .*thanos-compact.*\"}[5m]))\n/\n  sum by (job) (rate(thanos_objstore_bucket_operations_total{job=~\"\
-            .*thanos-compact.*\"}[5m]))\n* 100 > 5\n)\n"
+          expr: |
+            (
+              sum by (job) (rate(thanos_objstore_bucket_operation_failures_total{job=~".*thanos-compact.*"}[5m]))
+            /
+              sum by (job) (rate(thanos_objstore_bucket_operations_total{job=~".*thanos-compact.*"}[5m]))
+            * 100 > 5
+            )
           for: 15m
           labels:
             severity: warning

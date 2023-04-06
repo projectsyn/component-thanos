@@ -16,9 +16,12 @@ spec:
               | humanize}}% of requests.
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivehttprequesterrorratehigh
             summary: Thanos Receive is failing to handle requests.
-          expr: "(\n  sum by (job) (rate(http_requests_total{code=~\"5..\", job=~\"\
-            .*thanos-receive.*\", handler=\"receive\"}[5m]))\n/\n  sum by (job) (rate(http_requests_total{job=~\"\
-            .*thanos-receive.*\", handler=\"receive\"}[5m]))\n) * 100 > 5\n"
+          expr: |
+            (
+              sum by (job) (rate(http_requests_total{code=~"5..", job=~".*thanos-receive.*", handler="receive"}[5m]))
+            /
+              sum by (job) (rate(http_requests_total{job=~".*thanos-receive.*", handler="receive"}[5m]))
+            ) * 100 > 5
           for: 5m
           labels:
             severity: critical
@@ -30,10 +33,12 @@ spec:
               of {{ $value }} seconds for requests.
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivehttprequestlatencyhigh
             summary: Thanos Receive has high HTTP requests latency.
-          expr: "(\n  histogram_quantile(0.99, sum by (job, le) (rate(http_request_duration_seconds_bucket{job=~\"\
-            .*thanos-receive.*\", handler=\"receive\"}[5m]))) > 10\nand\n  sum by\
-            \ (job) (rate(http_request_duration_seconds_count{job=~\".*thanos-receive.*\"\
-            , handler=\"receive\"}[5m])) > 0\n)\n"
+          expr: |
+            (
+              histogram_quantile(0.99, sum by (job, le) (rate(http_request_duration_seconds_bucket{job=~".*thanos-receive.*", handler="receive"}[5m]))) > 10
+            and
+              sum by (job) (rate(http_request_duration_seconds_count{job=~".*thanos-receive.*", handler="receive"}[5m])) > 0
+            )
           for: 10m
           labels:
             severity: critical
@@ -45,12 +50,22 @@ spec:
               | humanize}}% of requests.
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivehighreplicationfailures
             summary: Thanos Receive is having high number of replication failures.
-          expr: "thanos_receive_replication_factor > 1\n  and\n(\n  (\n    sum by\
-            \ (job) (rate(thanos_receive_replications_total{result=\"error\", job=~\"\
-            .*thanos-receive.*\"}[5m]))\n  /\n    sum by (job) (rate(thanos_receive_replications_total{job=~\"\
-            .*thanos-receive.*\"}[5m]))\n  )\n  >\n  (\n    max by (job) (floor((thanos_receive_replication_factor{job=~\"\
-            .*thanos-receive.*\"}+1) / 2))\n  /\n    max by (job) (thanos_receive_hashring_nodes{job=~\"\
-            .*thanos-receive.*\"})\n  )\n) * 100\n"
+          expr: |
+            thanos_receive_replication_factor > 1
+              and
+            (
+              (
+                sum by (job) (rate(thanos_receive_replications_total{result="error", job=~".*thanos-receive.*"}[5m]))
+              /
+                sum by (job) (rate(thanos_receive_replications_total{job=~".*thanos-receive.*"}[5m]))
+              )
+              >
+              (
+                max by (job) (floor((thanos_receive_replication_factor{job=~".*thanos-receive.*"}+1) / 2))
+              /
+                max by (job) (thanos_receive_hashring_nodes{job=~".*thanos-receive.*"})
+              )
+            ) * 100
           for: 5m
           labels:
             severity: warning
@@ -62,9 +77,12 @@ spec:
               | humanize}}% of requests.
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivehighforwardrequestfailures
             summary: Thanos Receive is failing to forward requests.
-          expr: "(\n  sum by (job) (rate(thanos_receive_forward_requests_total{result=\"\
-            error\", job=~\".*thanos-receive.*\"}[5m]))\n/\n  sum by (job) (rate(thanos_receive_forward_requests_total{job=~\"\
-            .*thanos-receive.*\"}[5m]))\n) * 100 > 20\n"
+          expr: |
+            (
+              sum by (job) (rate(thanos_receive_forward_requests_total{result="error", job=~".*thanos-receive.*"}[5m]))
+            /
+              sum by (job) (rate(thanos_receive_forward_requests_total{job=~".*thanos-receive.*"}[5m]))
+            ) * 100 > 20
           for: 5m
           labels:
             severity: info
@@ -76,9 +94,13 @@ spec:
               file, {{$value | humanize}} of attempts failed.
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivehighhashringfilerefreshfailures
             summary: Thanos Receive is failing to refresh hasring file.
-          expr: "(\n  sum by (job) (rate(thanos_receive_hashrings_file_errors_total{job=~\"\
-            .*thanos-receive.*\"}[5m]))\n/\n  sum by (job) (rate(thanos_receive_hashrings_file_refreshes_total{job=~\"\
-            .*thanos-receive.*\"}[5m]))\n> 0\n)\n"
+          expr: |
+            (
+              sum by (job) (rate(thanos_receive_hashrings_file_errors_total{job=~".*thanos-receive.*"}[5m]))
+            /
+              sum by (job) (rate(thanos_receive_hashrings_file_refreshes_total{job=~".*thanos-receive.*"}[5m]))
+            > 0
+            )
           for: 15m
           labels:
             severity: warning
@@ -103,15 +125,10 @@ spec:
               data to object storage.
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivenoupload
             summary: Thanos Receive has not uploaded latest data to object storage.
-          expr: '(up{job=~".*thanos-receive.*"} - 1)
-
-            + on (job, instance) # filters to only alert on current instance last
-            3h
-
-            (sum by (job, instance) (increase(thanos_shipper_uploads_total{job=~".*thanos-receive.*"}[3h]))
-            == 0)
-
-            '
+          expr: |
+            (up{job=~".*thanos-receive.*"} - 1)
+            + on (job, instance) # filters to only alert on current instance last 3h
+            (sum by (job, instance) (increase(thanos_shipper_uploads_total{job=~".*thanos-receive.*"}[3h])) == 0)
           for: 3h
           labels:
             severity: critical
@@ -125,10 +142,12 @@ spec:
             runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivetrafficbelowthreshold
             summary: Thanos Receive is experiencing low avg. 1-hr ingestion rate relative
               to avg. 12-hr ingestion rate.
-          expr: "(\n  avg_over_time(rate(http_requests_total{job=~\".*thanos-receive.*\"\
-            , code=~\"2..\", handler=\"receive\"}[5m])[1h:5m])\n/\n  avg_over_time(rate(http_requests_total{job=~\"\
-            .*thanos-receive.*\", code=~\"2..\", handler=\"receive\"}[5m])[12h:5m])\n\
-            ) * 100 < 50\n"
+          expr: |
+            (
+              avg_over_time(rate(http_requests_total{job=~".*thanos-receive.*", code=~"2..", handler="receive"}[5m])[1h:5m])
+            /
+              avg_over_time(rate(http_requests_total{job=~".*thanos-receive.*", code=~"2..", handler="receive"}[5m])[12h:5m])
+            ) * 100 < 50
           for: 1h
           labels:
             severity: warning
