@@ -44,6 +44,8 @@ parameters:
       enabled:
         # * Enables all alerts
         "*": true
+        ThanosQueryGrpcClientErrorRate: false
+        ThanosQueryGrpcServerErrorRate: false
       custom: {}
     queryRbacProxy:
       enabled: false
@@ -90,6 +92,8 @@ parameters:
       enabled:
         # * Enables all alerts
         "*": true
+        ThanosReceiveConfigReloadFailure: false
+        ThanosReceiveTrafficBelowThreshold: false
       custom: {}
     compactor:
       enabled: false

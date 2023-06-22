@@ -42,39 +42,6 @@ spec:
             severity: critical
             syn: 'true'
             syn_component: thanos
-        - alert: ThanosQueryGrpcServerErrorRate
-          annotations:
-            description: Thanos Query {{$labels.job}} is failing to handle {{ $value
-              | humanize }}% of requests.
-            summary: Thanos Query is failing to handle requests.
-          expr: |
-            (
-              sum by (job) (rate(grpc_server_handled_total{grpc_code=~"Unknown|ResourceExhausted|Internal|Unavailable|DataLoss|DeadlineExceeded", job=~"thanos-query.*"}[5m]))
-            /
-              sum by (job) (rate(grpc_server_started_total{job=~"thanos-query.*"}[5m]))
-            * 100 > 5
-            )
-          for: 5m
-          labels:
-            severity: warning
-            syn: 'true'
-            syn_component: thanos
-        - alert: ThanosQueryGrpcClientErrorRate
-          annotations:
-            description: Thanos Query {{$labels.job}} is failing to send {{ $value
-              | humanize }}% of requests.
-            summary: Thanos Query is failing to send requests.
-          expr: |
-            (
-              sum by (job) (rate(grpc_client_handled_total{grpc_code!="OK", job=~"thanos-query.*"}[5m]))
-            /
-              sum by (job) (rate(grpc_client_started_total{job=~"thanos-query.*"}[5m]))
-            ) * 100 > 5
-          for: 5m
-          labels:
-            severity: warning
-            syn: 'true'
-            syn_component: thanos
         - alert: ThanosQueryHighDNSFailures
           annotations:
             description: Thanos Query {{$labels.job}} have {{ $value | humanize }}%

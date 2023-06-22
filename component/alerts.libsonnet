@@ -23,9 +23,10 @@ local ruleEnabled = function(alertConfig, rule)
   local globalEnabled =
     std.get(alertConfig.enabled, '*', false) == true;
 
+  (std.get(std.get(rule, 'labels', {}), 'severity', '') != 'info')
   // enable rule if either globally enabled and not explicitly disabled, or if
   // explicitly enabled.
-  std.get(alertConfig.enabled, rule.alert, globalEnabled) == true;
+  && std.get(alertConfig.enabled, rule.alert, globalEnabled) == true;
 
 local customAlerts = function(name, groupName, customAlerts)
   com.namespaced(params.namespace, kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', name) {
