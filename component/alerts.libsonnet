@@ -20,8 +20,12 @@ local rulePatch = function(alertConfig, rule)
   + com.makeMergeable(com.getValueOrDefault(patches, rule.alert, {}));
 
 local ruleEnabled = function(alertConfig, rule)
-  (std.objectHas(alertConfig.enabled, '*') && alertConfig.enabled['*'] == true)
-  || (std.objectHas(alertConfig.enabled, rule.alert) && alertConfig.enabled[rule.alert] == true);
+  local globalEnabled =
+    std.get(alertConfig.enabled, '*', false) == true;
+
+  // enable rule if either globally enabled and not explicitly disabled, or if
+  // explicitly enabled.
+  std.get(alertConfig.enabled, rule.alert, globalEnabled) == true;
 
 local customAlerts = function(name, groupName, customAlerts)
   com.namespaced(params.namespace, kube._Object('monitoring.coreos.com/v1', 'PrometheusRule', name) {
