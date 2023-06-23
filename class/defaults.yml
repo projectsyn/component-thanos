@@ -44,6 +44,7 @@ parameters:
       enabled:
         # * Enables all alerts
         "*": true
+        ThanosQueryHighDNSFailures: false
         ThanosQueryGrpcClientErrorRate: false
         ThanosQueryGrpcServerErrorRate: false
       custom: {}
@@ -67,6 +68,9 @@ parameters:
       enabled:
         # * Enables all alerts
         "*": true
+        ThanosStoreBucketHighOperationFailures: false
+        ThanosStoreObjstoreOperationLatencyHigh: false
+        ThanosStoreSeriesGateLatencyHigh: false
       custom:
         # Adapted from https://github.com/rhobs/configuration/blob/70aa0baf3d5c7a5a1a3d2e5b2828b32220944b61/resources/observability/prometheusrules/observatorium-custom-metrics-production.prometheusrules.yaml#L14
         ThanosNoStoreBlocksLoaded:
