@@ -71,23 +71,6 @@ spec:
             severity: warning
             syn: 'true'
             syn_component: thanos
-        - alert: ThanosReceiveHighForwardRequestFailures
-          annotations:
-            description: Thanos Receive {{$labels.job}} is failing to forward {{$value
-              | humanize}}% of requests.
-            runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivehighforwardrequestfailures
-            summary: Thanos Receive is failing to forward requests.
-          expr: |
-            (
-              sum by (job) (rate(thanos_receive_forward_requests_total{result="error", job=~".*thanos-receive.*"}[5m]))
-            /
-              sum by (job) (rate(thanos_receive_forward_requests_total{job=~".*thanos-receive.*"}[5m]))
-            ) * 100 > 20
-          for: 5m
-          labels:
-            severity: info
-            syn: 'true'
-            syn_component: thanos
         - alert: ThanosReceiveHighHashringFileRefreshFailures
           annotations:
             description: Thanos Receive {{$labels.job}} is failing to refresh hashring
@@ -106,19 +89,6 @@ spec:
             severity: warning
             syn: 'true'
             syn_component: thanos
-        - alert: ThanosReceiveConfigReloadFailure
-          annotations:
-            description: Thanos Receive {{$labels.job}} has not been able to reload
-              hashring configurations.
-            runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceiveconfigreloadfailure
-            summary: Thanos Receive has not been able to reload configuration.
-          expr: avg by (job) (thanos_receive_config_last_reload_successful{job=~".*thanos-receive.*"})
-            != 1
-          for: 5m
-          labels:
-            severity: warning
-            syn: 'true'
-            syn_component: thanos
         - alert: ThanosReceiveNoUpload
           annotations:
             description: Thanos Receive {{$labels.instance}} has not uploaded latest
@@ -132,24 +102,5 @@ spec:
           for: 3h
           labels:
             severity: critical
-            syn: 'true'
-            syn_component: thanos
-        - alert: ThanosReceiveTrafficBelowThreshold
-          annotations:
-            description: At Thanos Receive {{$labels.job}} in {{$labels.namespace}}
-              , the average 1-hr avg. metrics ingestion rate  is {{$value | humanize}}%
-              of 12-hr avg. ingestion rate.
-            runbook_url: https://github.com/thanos-io/thanos/tree/main/mixin/runbook.md#alert-name-thanosreceivetrafficbelowthreshold
-            summary: Thanos Receive is experiencing low avg. 1-hr ingestion rate relative
-              to avg. 12-hr ingestion rate.
-          expr: |
-            (
-              avg_over_time(rate(http_requests_total{job=~".*thanos-receive.*", code=~"2..", handler="receive"}[5m])[1h:5m])
-            /
-              avg_over_time(rate(http_requests_total{job=~".*thanos-receive.*", code=~"2..", handler="receive"}[5m])[12h:5m])
-            ) * 100 < 50
-          for: 1h
-          labels:
-            severity: warning
             syn: 'true'
             syn_component: thanos

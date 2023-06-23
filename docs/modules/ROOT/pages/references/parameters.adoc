@@ -121,6 +121,8 @@ default::
 [source,yaml]
 ----
 "*": true
+ThanosQueryGrpcClientErrorRate: false
+ThanosQueryGrpcServerErrorRate: false
 ----
 
 Configuration for the Thanos https://thanos.io/tip/components/query.md[Query] alerts.
@@ -129,6 +131,7 @@ From Kubernetes version `v1.22` (OCP `v4.9`) alerts include upstream runbooks.
 
 `"*": true` allows enabling all alerts.
 `AlertName: true` enables a single alert.
+`AlertName: false` allows disabling a single alert if `"*": true` is set.
 
 == `query_alerts.patches`
 
@@ -280,6 +283,7 @@ From Kubernetes version `v1.22` (OCP `v4.9`) alerts include upstream runbooks.
 
 `"*": true` allows enabling all alerts.
 `AlertName: true` enables a single alert.
+`AlertName: false` allows disabling a single alert if `"*": true` is set.
 
 == `store_alerts.patches`
 
@@ -366,6 +370,7 @@ From Kubernetes version `v1.22` (OCP `v4.9`) alerts include upstream runbooks.
 
 `"*": true` allows enabling all alerts.
 `AlertName: true` enables a single alert.
+`AlertName: false` allows disabling a single alert if `"*": true` is set.
 
 == `compactor_alerts.patches`
 
@@ -457,6 +462,8 @@ default::
 [source,yaml]
 ----
 "*": true
+ThanosReceiveConfigReloadFailure: false
+ThanosReceiveTrafficBelowThreshold: false
 ----
 
 Configuration for the Thanos https://thanos.io/tip/components/receive.md/[Receiver] alerts.
@@ -465,6 +472,7 @@ From Kubernetes version `v1.22` (OCP `v4.9`) alerts include upstream runbooks.
 
 `"*": true` allows enabling all alerts.
 `AlertName: true` enables a single alert.
+`AlertName: false` allows disabling a single alert if `"*": true` is set.
 
 == `receive_alerts.patches`
 

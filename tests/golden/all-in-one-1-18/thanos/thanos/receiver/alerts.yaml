@@ -101,18 +101,6 @@ spec:
             severity: warning
             syn: 'true'
             syn_component: thanos
-        - alert: ThanosReceiveConfigReloadFailure
-          annotations:
-            description: Thanos Receive {{$labels.job}} has not been able to reload
-              hashring configurations.
-            summary: Thanos Receive has not been able to reload configuration.
-          expr: avg(thanos_receive_config_last_reload_successful{job=~"thanos-receive.*"})
-            by (job) != 1
-          for: 5m
-          labels:
-            severity: warning
-            syn: 'true'
-            syn_component: thanos
         - alert: ThanosReceiveNoUpload
           annotations:
             description: Thanos Receive {{ $labels.instance }} of {{$labels.job}}
