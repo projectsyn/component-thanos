@@ -49,7 +49,7 @@ local kube_thanos_version =
   ) then
     kube_thanos_version_map[k8s_version]
   else
-    'v0.29.0';
+    'v0.26.0';
 
 {
   version: 1,
