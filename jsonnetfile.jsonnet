@@ -22,6 +22,7 @@ local kube_thanos_version_map = {
   '1.20': 'release-0.17',  // corresponds to v0.17.0
   '1.21': 'release-0.19',  // corresponds to v0.19.0
   '1.22': 'release-0.22',  // corresponds to v0.22.0
+  '1.23': 'v0.26.0',
 };
 
 local k8s_version = std.extVar('kubernetes_version');
