@@ -35,7 +35,7 @@ local thanos_mixin_version =
     thanos_mixin_version_map[k8s_version]
   else
     // Use most recent version if we didn't find an entry in the map
-    thanos_mixin_version_map['1.22'];
+    thanos_mixin_version_map['1.23'];
 
 local kube_thanos_extver = std.extVar('kube_thanos_version');
 local kube_thanos_version =
@@ -47,7 +47,7 @@ local kube_thanos_version =
   ) then
     kube_thanos_version_map[k8s_version]
   else
-    'v0.23.0';
+    'v0.29.0';
 
 {
   version: 1,
