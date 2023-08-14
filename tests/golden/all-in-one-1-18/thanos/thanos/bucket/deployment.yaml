@@ -42,6 +42,7 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
           image: quay.io/thanos/thanos:v0.24.0
+          imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 4
             httpGet:
@@ -62,6 +63,7 @@ spec:
             periodSeconds: 5
           resources: {}
           terminationMessagePolicy: FallbackToLogsOnError
+          volumeMounts: []
       nodeSelector:
         kubernetes.io/os: linux
       securityContext:
@@ -69,3 +71,4 @@ spec:
         runAsUser: 65534
       serviceAccountName: thanos-bucket-1
       terminationGracePeriodSeconds: 120
+      volumes: []
