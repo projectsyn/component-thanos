@@ -55,6 +55,8 @@ spec:
             - --retention.resolution-5m=90d
             - --retention.resolution-1h=1y
             - --delete-delay=48h
+            - --compact.concurrency=1
+            - --downsample.concurrency=1
             - --deduplication.replica-label=prometheus_replica
             - --deduplication.replica-label=rule_replica
           env:
@@ -68,6 +70,7 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
           image: quay.io/thanos/thanos:v0.24.0
+          imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 4
             httpGet:

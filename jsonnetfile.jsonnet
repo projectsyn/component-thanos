@@ -9,6 +9,8 @@ local thanos_mixin_version_map = {
   '1.20': '09b36547e5ed61a32a309648a8913bd02c08d3cc',
   '1.21': 'ff363498fc95cfe17de894d7237bcf38bdd0bc36',
   '1.22': '632032712f12eea0015aaef24ee1e14f38ef3e55',  // from: https://github.com/prometheus-operator/kube-prometheus/blob/5b9aa36169af47a1fb938cc7984d4ee59588fe2a/jsonnetfile.lock.json#L144
+  '1.23': '17c576472d80972bfd3705e1e0a08e6f8da8e04b',  // from: https://github.com/prometheus-operator/kube-prometheus/blob/725b8bd3acd859663bcc67b615ac3b3888d33010/jsonnetfile.lock.json#L164
+  '1.24': '27e4714174e2b7d4542ce9a723716134afba1579',  // from https://github.com/prometheus-operator/kube-prometheus/blob/50952c43c4bf5f98a9e026b621505e85d9471bd2/jsonnetfile.lock.json#L164C19-L164C59
 };
 
 // To get the kube-thanos versions which are compatible with OCP4.x:
@@ -21,6 +23,8 @@ local kube_thanos_version_map = {
   '1.20': 'release-0.17',  // corresponds to v0.17.0
   '1.21': 'release-0.19',  // corresponds to v0.19.0
   '1.22': 'release-0.22',  // corresponds to v0.22.0
+  '1.23': 'v0.23.0',
+  '1.24': 'v0.26.0',
 };
 
 local k8s_version = std.extVar('kubernetes_version');
@@ -34,7 +38,7 @@ local thanos_mixin_version =
     thanos_mixin_version_map[k8s_version]
   else
     // Use most recent version if we didn't find an entry in the map
-    thanos_mixin_version_map['1.22'];
+    thanos_mixin_version_map['1.24'];
 
 local kube_thanos_extver = std.extVar('kube_thanos_version');
 local kube_thanos_version =
@@ -46,7 +50,7 @@ local kube_thanos_version =
   ) then
     kube_thanos_version_map[k8s_version]
   else
-    'v0.23.0';
+    'v0.26.0';
 
 {
   version: 1,
