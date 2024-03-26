@@ -266,6 +266,14 @@ default:: `false`
 If the Store component should be deployed.
 It will require an `objectStorageConfig` if enabled.
 
+=== `additionalArgs`
+
+[horizontal]
+type:: array
+default:: `[]`
+
+Additional args that should be passed to the statefulset.
+
 == `store_alerts.enabled`
 
 [horizontal]
