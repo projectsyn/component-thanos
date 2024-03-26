@@ -63,6 +63,7 @@ parameters:
       enabled: false
       replicas: 2
       serviceType: ClusterIP
+      additionalArgs: []
     store_alerts:
       patches: {}
       enabled:
