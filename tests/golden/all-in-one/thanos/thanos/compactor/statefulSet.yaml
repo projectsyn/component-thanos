@@ -59,6 +59,12 @@ spec:
             - --downsample.concurrency=1
             - --deduplication.replica-label=prometheus_replica
             - --deduplication.replica-label=rule_replica
+            - --wait-interval=24h
+            - --compact.cleanup-interval=24h
+            - --block-viever.global.sync-block-interval=30m
+            - --compact.progress-interval=0s
+            - --web.disable
+            - --consistency-delay=30m
           env:
             - name: OBJSTORE_CONFIG
               valueFrom:
