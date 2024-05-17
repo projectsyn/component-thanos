@@ -9,6 +9,23 @@ local inv = kap.inventory();
 local params = inv.parameters.thanos;
 
 local compactor = thanos.compact(params.commonConfig + params.compactor) {
+  statefulSet+: {
+    spec+: {
+      template+: {
+        spec+: {
+          containers: [
+            if c.name == 'thanos-compact' && 'extraArgs' in params.compactor then
+              c {
+                args+: params.compactor.extraArgs,
+              }
+            else
+              c
+            for c in super.containers
+          ],
+        },
+      },
+    },
+  },
   alerts: alerts.PrometheusRuleFromMixin('thanos-compactor-alerts', [ 'thanos-compact.rules', 'thanos-compact' ], params.compactor_alerts),
   custom_alerts: alerts.PrometheusRuleForCustom('thanos-compactor-custom-alerts', 'thanos-compactor-custom.rules', params.compactor_alerts.custom),
 };

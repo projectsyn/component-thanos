@@ -361,6 +361,14 @@ default:: `false`
 If the Compactor component should be deployed.
 It will require an `objectStorageConfig` if enabled.
 
+=== `extraArgs`
+
+[horizontal]
+type:: array
+default:: `null`
+
+If the Compactor component should receive additional arguments. Those extraArgs are extending the command line arguments of the Compactor container.
+
 == `compactor_alerts.enabled`
 
 [horizontal]
