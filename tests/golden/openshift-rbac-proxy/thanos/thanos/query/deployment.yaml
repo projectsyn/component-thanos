@@ -84,7 +84,7 @@ spec:
             - --openshift-sar={"namespace":"syn-thanos","resource":"services","name":"thanos-auth","verb":"get"}
             - --http-address=http://:8080
             - --https-address=
-          image: quay.io/openshift/origin-oauth-proxy:4.9
+          image: quay.io/openshift/origin-oauth-proxy:4.13
           name: openshift-oauth-proxy
           ports:
             - containerPort: 8080
